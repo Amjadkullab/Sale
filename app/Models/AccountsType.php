@@ -13,8 +13,8 @@ class AccountsType extends Model
 'name','active','relatediternalaccounts'
    ];
 
-   public function accounts(){
-    return $this->hasMany(Account::class);
+   public function Accounts(){
+    return $this->hasmany(Account::class,'id');
    }
 
 
