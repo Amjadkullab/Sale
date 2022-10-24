@@ -33,8 +33,8 @@
 
                     <div class="col-md-6">
                     <div class="form-group">
-                        <label for="account_types_id ">  نوع الحساب</label>
-                       <select name="account_types_id " id="account_types_id " class="form-control" >
+                        <label for="account_types_id">  نوع الحساب</label>
+                       <select name="account_types_id" id="account_types_id" class="form-control" >
                         <option value="">اختر النوع</option>
                         @if(@isset($account_type) && !@empty($account_type) )
                         @foreach ($account_type as $info )

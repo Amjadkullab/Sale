@@ -13,7 +13,7 @@ class Account extends Model
   ,'is_archived','current_balance','notes','other_table_FK','is_parent','start_balance_status'
  ];
  public function Account_type(){
-    return $this->belongsTo(AccountsType::class,'id');
+    return $this->belongsTo(AccountsType::class,'account_types_id','id');
  }
 
 

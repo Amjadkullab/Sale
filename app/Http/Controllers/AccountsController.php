@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AccountRequestUpdate;
 use App\Http\Requests\AccountsRequest;
 use App\Models\Admin;
 use App\Models\Account;
@@ -52,7 +53,7 @@ class AccountsController extends Controller
  public function store(AccountsRequest $request){
       try{
         $com_code = auth()->user()->com_code;
-        $checkExists = Account::where(['name' => $request->name, 'com_code' => $com_code])->first();
+
     $row = Account::select('account_number')->where(['com_code'=>$com_code])->orderby('id','DESC')->first();
     if(!empty($row)){
         $data_insert['account_number']=$row['account_number']+1;
@@ -101,5 +102,56 @@ class AccountsController extends Controller
         return redirect()->back()->with(['error'=>'عفوا حدث خطأ ما '.$ex->getMessage()])->withInput();
     }
     }
+
+    public function edit($id){
+        $com_code = Auth()->user()->com_code;
+        $data = Account::select()->where(['com_code'=>$com_code,'id'=>$id])->first();
+        $account_type = AccountsType::select('id','name')->where(['active'=>1,'relatediternalaccounts'=>0])->orderby('id','ASC')->get();
+        $parent_accounts = Account::select('account_number','name')->where(['is_parent'=>1,'com_code'=>$com_code])->orderby('id','ASC')->get();
+        return view('admin.accounts.edit',['com_code'=> $com_code,'data'=>$data,'account_type'=>$account_type ,'parent_accounts'=>$parent_accounts]);
+    }
+
+
+    public function update($id,AccountRequestUpdate $request){
+
+
+
+        try{
+            $com_code = auth()->user()->com_code;
+            $data = Account::select('id')->where(['com_code'=>$com_code,'id'=>$id])->first();
+            if(empty($data)){
+                return redirect()->route('admin.accounts.index')->with(['error'=>'غير قادر على الوصول الى البيانات المطلوبة']);
+            }
+
+        $checkExists = Account::where(['name'=>$request->name ,'com_code'=>$com_code])->where('id','!=',$id)->first();
+        if(!empty($checkExists)){
+            return redirect()->back()->with(['error'=>'عفوا اسم الحساب موجود من قبل'])->withInput();
+        }
+        $data_to_update['name'] = $request->name;
+        $data_to_update['account_types_id']=$request->account_types_id;
+        $data_to_update['is_parent']=$request->is_parent;
+        if($data_to_update['is_parent']==0){
+            $data_to_update['parent_account_number']=$request->parent_account_number;
+        }
+        $data_to_update['notes']=$request->notes;
+        $data_to_update['is_archived']=$request->is_archived;
+            $data_to_update['updated_at'] = date('Y-m-d H:s');
+            $data_to_update['updated_by'] = auth()->user()->id ;
+            $data_to_update['date'] = date('Y-m-d');
+            $data_to_update['com_code'] = $com_code;
+            Account::where(['id'=>$id , 'com_code'=>$com_code])->update( $data_to_update);
+            return redirect()->route('admin.accounts.index')->with(['success' => 'لقد تم تحديث البيانات بنجاح']);
+        }
+        catch(\Exception $ex){
+            return redirect()->back()->with(['error'=>'عفوا حدثث خطأ ما'.$ex->getMessage()])->withinput();
+        }
+    }
+
+
+
+
+
+
+
 }
 
