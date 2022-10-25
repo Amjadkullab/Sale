@@ -11,7 +11,7 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title card_title_center">بيانات الحسابات المالية</h3>
-                    <input type="hidden" id="search_token" value="{{csrf_token() }}">
+                    <input type="hidden" id="search_token" value="{{csrf_token()}}">
                     <input type="hidden" id="ajax_search_url" value="{{route('admin.accounts.ajax_search')}}">
                 <a href="{{ route('admin.accounts.create') }}" class="btn btn-sm btn-success">اضافة جديد</a>
 
@@ -26,7 +26,7 @@
 
                             <input  type="radio" checked name="searchbyradio" id="searchbyradio" value="account_number">بحث برقم الحساب
                             <input  type="radio" name="searchbyradio" id="searchbyradio" value="name">بالاسم
-                            <input style="margin-top: 6px !important;" type="text" id="search_by_text" class="form-control" placeholder=" اسم- رقم الحساب"> <br>
+                            <input style="margin-top: 8px !important;" type="text" id="search_by_text" class="form-control" placeholder=" اسم- رقم الحساب"> <br>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">

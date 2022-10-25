@@ -233,9 +233,9 @@ public function ajax_search(Request $request){
         //    $info->parent_inv_itemcard_name =Inv_itemcard::where(['id'=>$info->parent_inv_itemcard_id])->value('name');
 
 
-            if($info->updated_by > 0 and $info->updated_by !=null ){
-                $info->updated_by_admin = Admin::where(['id',$info->updated_by])->value('name');
-            }
+            // if($info->updated_by > 0 and $info->updated_by !=null ){
+            //     $info->updated_by_admin = Admin::where(['id',$info->updated_by])->value('name');
+            // }
             $info->account_types_name =AccountsType::where(['id'=>$info->account_types_id])->value('name');
                if($info->is_parent==0){
 
@@ -247,10 +247,10 @@ public function ajax_search(Request $request){
                }
         }
     }
+      return view('admin.accounts.ajax_search',['data'=>$data]);
 
-      return view('admin.accounts.ajax_search',['data'=>$data ]);
+    }
 
- }
 
 
 

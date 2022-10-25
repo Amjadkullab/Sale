@@ -97,8 +97,6 @@ error:function(){
 
 });
 
-
-
  }
  $(document).on('click','#ajax_pagination_in_search a',function(e){
     e.preventDefault();
@@ -107,16 +105,14 @@ error:function(){
     var is_parent = $("#is_parent_search").val();
     var searchbyradio = $("input[type=radio][name=searchbyradio]:checked").val();
     var search_token = $("#search_token").val();
-
-
-  var url = $(this).attr("href");
+    var url = $(this).attr("href");
 
   jQuery.ajax({
     url:url,
     type:'post',
     datatype : 'html',
     cache : false ,
-    data : {search_by_text :search_by_text,searchbyradio:searchbyradio,account_types:account_types,is_parent:is_parent,"_token":search_token},
+    data : {search_by_text:search_by_text,searchbyradio:searchbyradio,account_types:account_types,is_parent:is_parent,"_token":search_token},
   success:function(data){
 
       $("#ajax_responce_searchDiv").html(data);

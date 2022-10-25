@@ -24,7 +24,7 @@ use App\Http\Controllers\Sales_material_typesController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-define('PAGINATION_COUNT', 3);
+define('PAGINATION_COUNT', 1);
 // Route::get('/', function () {
 //     return view('welcome');
 // });
@@ -108,7 +108,7 @@ Route::get('/inv_itemcard/show/{id}',[InvItemCardController::class,'show'])->nam
  Route::get('/accounts/edit/{id}',[AccountsController::class,'edit'])->name('admin.accounts.edit');
  Route::post('/accounts/update/{id}',[AccountsController::class,'update'])->name('admin.accounts.update');
  Route::get('/accounts/delete/{id}',[AccountsController::class,'delete'])->name('admin.accounts.delete');
- Route::post('/accounts/ajax_search',[InvIteAccountsControllermCardController::class,'ajax_search'])->name('admin.accounts.ajax_search');
+ Route::post('/accounts/ajax_search',[AccountsController::class,'ajax_search'])->name('admin.accounts.ajax_search');
  Route::get('/accounts/show/{id}',[AccountsController::class,'show'])->name('admin.accounts.show');
 
 
