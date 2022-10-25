@@ -24,10 +24,36 @@
                     <div class="row">
                         <div class="col-md-4">
 
-                            <input  type="radio" name="searchbyradio" id="searchbyradio" value="account_number">بحث برقم الحساب
+                            <input  type="radio" checked name="searchbyradio" id="searchbyradio" value="account_number">بحث برقم الحساب
                             <input  type="radio" name="searchbyradio" id="searchbyradio" value="name">بالاسم
                             <input style="margin-top: 6px !important;" type="text" id="search_by_text" class="form-control" placeholder=" اسم- رقم الحساب"> <br>
                         </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="account_types_id_search">  بحث بنوع الحساب</label>
+                               <select name="account_types_id_search" id="account_types_id_search" class="form-control" >
+                                <option value="all"> بحث بالكل</option>
+                                @if(@isset($account_type) && !@empty($account_type) )
+                                @foreach ($account_type as $info )
+                                <option  value="{{$info->id}}">{{$info->name}}</option>
+                                @endforeach
+                                @endif
+                               </select>
+
+                             </div>
+                             </div>
+                             <div class="col-md-4">
+                                <div class="form-group">
+                                   <label for="is_parent_search">  هل الحساب أب</label>
+                                  <select name="is_parent_search" id="is_parent_search" class="form-control" >
+                                    <option value="all"> بحث بالكل</option>
+                                    <option  value="1"> نعم</option>
+                                    <option  value="0"> لا </option>
+                                  </select>
+
+                                </div>
+                                </div>
+
 
 
                         <div class="clearfix"></div>
@@ -44,7 +70,7 @@
                                     <th>رقم الحساب</th>
                                     <th>نوع الحساب</th>
                                     <th>هل اب</th>
-                                    <th> الحساب  الاب</th>
+                                    <th> الحساب الاب</th>
                                       <th>الرصيد</th>
                                     <th>حالة التفعيل</th>
                                     <th></th>
@@ -54,7 +80,6 @@
                                 <tbody>
                                     @foreach ($data as $info)
                                         <tr>
-
                                             <td>{{ $info->name }}</td>
                                             <td>{{ $info->account_number }}</td>
                                             <td>{{$info->account_types_name}}</td>
@@ -104,7 +129,6 @@
 
                                             </td> --}}
                                         </tr>
-
                                    @endforeach
                                 </tbody>
                             </table>
@@ -121,6 +145,6 @@
     </div>
 @endsection
 @section('script')
-<script src="{{ asset('admin_assets/js/inv_itemcard.js')}}"></script>
+<script src="{{asset('admin_assets/js/accounts.js')}}"></script>
 
 @endsection

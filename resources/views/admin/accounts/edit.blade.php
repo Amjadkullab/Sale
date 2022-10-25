@@ -66,8 +66,8 @@
 
                      <div class="col-md-6" id="parentDiv" @if(old('is_parent',$data['is_parent'])==1) style="display: none;" @endif>
                         <div class="form-group">
-                            <label for="parent_account_number ">  الحسابات الأب </label>
-                           <select name="parent_account_number " id="parent_account_number " class="form-control" >
+                            <label for="parent_account_number">  الحسابات الأب </label>
+                           <select name="parent_account_number" id="parent_account_number" class="form-control" >
                             <option value="">اختر الحساب الاب</option>
                             @if(@isset($parent_accounts) && !@empty($parent_accounts) )
                             @foreach ($parent_accounts as $info )

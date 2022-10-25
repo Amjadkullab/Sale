@@ -1,16 +1,14 @@
-@if (@isset($data) && !@empty($data) && count($data)>0)
-@php
-    $i = 1;
-@endphp
+@if (@isset($data) && !@empty($data))
+
 <table id="example2" class="table table-bordered table-hover">
     <thead class="custom_thead">
-        <th>مسلسل</th>
+
         <th>اسم</th>
-        <th>نوع</th>
-        <th>الفئة</th>
-        <th> الصنف الاب</th>
-        <th> الوحدة الأب</th>
-        <th> الوحدة التجزئة</th>
+        <th>رقم الحساب</th>
+        <th>نوع الحساب</th>
+        <th>هل اب</th>
+        <th> الحساب الاب</th>
+          <th>الرصيد</th>
         <th>حالة التفعيل</th>
         <th></th>
         {{-- <th>تاريخ الاضافة</th>
@@ -19,21 +17,17 @@
     <tbody>
         @foreach ($data as $info)
             <tr>
-                <td>{{ $i }}</td>
                 <td>{{ $info->name }}</td>
-                <td> @if ($info->item_type == 1)مخزني @elseif ($info->item_type == 2) استهلاكي بصلاحية @elseif ($info->item_type == 3)  عهدة  @else غير محدد @endif</td>
-                <td>{{$info->inv_itemcard_categories_name}}</td>
-                <td>{{$info->parent_inv_itemcard_name}}</td>
-                <td>{{$info->uom_name}}</td>
-                <td>{{$info->retail_uom_name}}</td>
-                <td> @if ($info->active == 1)مفعلة  @else معطل @endif</td>
-
-
-
+                <td>{{ $info->account_number }}</td>
+                <td>{{$info->account_types_name}}</td>
+                <td> @if ($info->is_parent == 1)نعم  @else  لا @endif</td>
+                <td>{{$info->parent_account_name}}</td>
+                <td></td>
+                <td> @if ($info->is_archived == 1)مفعلة  @else معطل @endif</td>
                 <td>
-                  <a href="{{route('admin.inv_itemcard.edit',$info->id)}}" class="btn btn-sm btn-primary">تعديل</a>
-                    <a href="{{ route('admin.inv_itemcard.delete',$info->id) }}" class="btn btn-sm btn-danger are_you_sure">حذف</a>
-                    <a href="{{ route('admin.inv_itemcard.show',$info->id) }}" class="btn btn-sm btn-info ">عرض</a>
+                  <a href="{{route('admin.accounts.edit',$info->id)}}" class="btn btn-sm btn-primary">تعديل</a>
+                    <a href="{{ route('admin.accounts.delete',$info->id) }}" class="btn btn-sm btn-danger are_you_sure">حذف</a>
+                    <a href="{{ route('admin.accounts.show',$info->id) }}" class="btn btn-sm btn-info ">عرض</a>
                 </td>
 
 
@@ -72,9 +66,6 @@
 
                 </td> --}}
             </tr>
-            @php
-                $i++;
-            @endphp
        @endforeach
     </tbody>
 </table>

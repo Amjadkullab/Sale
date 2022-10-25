@@ -24,7 +24,7 @@ use App\Http\Controllers\Sales_material_typesController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-define('PAGINATION_COUNT', 1);
+define('PAGINATION_COUNT', 3);
 // Route::get('/', function () {
 //     return view('welcome');
 // });
