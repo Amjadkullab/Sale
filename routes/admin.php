@@ -10,6 +10,7 @@ use App\Http\Controllers\Inv_UomController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TreasuriesController;
 use App\Http\Controllers\Admin_panel_settingsController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\InvItemcardCategorieController;
 use App\Http\Controllers\InvItemCardController;
 use App\Http\Controllers\Sales_material_typesController;
@@ -98,10 +99,7 @@ Route::get('/inv_itemcard/show/{id}',[InvItemCardController::class,'show'])->nam
 
 
 //end account types
- //start account types
-
-
-
+ //start account
  Route::get('/accounts/index',[AccountsController::class,'index'])->name('admin.accounts.index');
  Route::get('/accounts/create',[AccountsController::class,'create'])->name('admin.accounts.create');
  Route::post('/accounts/store',[AccountsController::class,'store'])->name('admin.accounts.store');
@@ -111,8 +109,18 @@ Route::get('/inv_itemcard/show/{id}',[InvItemCardController::class,'show'])->nam
  Route::post('/accounts/ajax_search',[AccountsController::class,'ajax_search'])->name('admin.accounts.ajax_search');
  Route::get('/accounts/show/{id}',[AccountsController::class,'show'])->name('admin.accounts.show');
 
+//end account
+ //start customer
+ Route::get('/customer/index',[CustomerController::class,'index'])->name('admin.customer.index');
+ Route::get('/customer/create',[CustomerController::class,'create'])->name('admin.customer.create');
+ Route::post('/customer/store',[CustomerController::class,'store'])->name('admin.customer.store');
+ Route::get('/customer/edit/{id}',[CustomerController::class,'edit'])->name('admin.customer.edit');
+ Route::post('/customer/update/{id}',[CustomerController::class,'update'])->name('admin.customer.update');
+ Route::get('/customer/delete/{id}',[CustomerController::class,'delete'])->name('admin.customer.delete');
+ Route::post('/customer/ajax_search',[CustomerController::class,'ajax_search'])->name('admin.customer.ajax_search');
+ Route::get('/customer/show/{id}',[CustomerController::class,'show'])->name('admin.customer.show');
 
-//end account types
+//end customer
 
 
 

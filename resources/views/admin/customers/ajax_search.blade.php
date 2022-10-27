@@ -1,4 +1,4 @@
-@if (@isset($data) && !@empty($data) && count($data)>0)
+@if (@isset($data) && !@empty($data))
 
 <table id="example2" class="table table-bordered table-hover">
     <thead class="custom_thead">

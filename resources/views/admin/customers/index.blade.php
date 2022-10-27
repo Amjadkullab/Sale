@@ -1,8 +1,8 @@
 @extends('layouts.master')
-@section('title', '  الحسابات')
-@section('contentheader', 'الحسابات المالية')
+@section('title', '  العملاء')
+@section('contentheader',  ' الحسابات المالية')
 @section('contentheaderlink')
-    <a href="{{ route('admin.accounts.index') }}">الحسابات المالية</a>
+    <a href="{{ route('admin.customer.index') }}"> العملاء</a>
 @endsection
 @section('contentheaderactive', 'عرض')
 
@@ -10,10 +10,10 @@
 
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title card_title_center">بيانات الحسابات المالية</h3>
+                    <h3 class="card-title card_title_center">بيانات  العملاء</h3>
                     <input type="hidden" id="search_token" value="{{csrf_token()}}">
-                    <input type="hidden" id="ajax_search_url" value="{{route('admin.accounts.ajax_search')}}">
-                <a href="{{ route('admin.accounts.create') }}" class="btn btn-sm btn-success">اضافة جديد</a>
+                    <input type="hidden" id="ajax_search_url" value="{{route('admin.customer.ajax_search')}}">
+                <a href="{{ route('admin.customer.create') }}" class="btn btn-sm btn-success">اضافة جديد</a>
 
                 </div>
 
@@ -25,36 +25,10 @@
                         <div class="col-md-4">
 
                             <input  type="radio" checked name="searchbyradio" id="searchbyradio" value="account_number">بحث برقم الحساب
+                            <input  type="radio" checked name="searchbyradio" id="searchbyradio" value="code">بحث برقم العميل
                             <input  type="radio" name="searchbyradio" id="searchbyradio" value="name">بالاسم
-                            <input style="margin-top: 8px !important;" type="text" id="search_by_text" class="form-control" placeholder=" اسم- رقم الحساب"> <br>
+                            <input style="margin-top: 8px !important;" type="text" id="search_by_text" class="form-control" placeholder=" -كود العميل اسم- رقم الحساب"> <br>
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="account_types_id_search">  بحث بنوع الحساب</label>
-                               <select name="account_types_id_search" id="account_types_id_search" class="form-control" >
-                                <option value="all"> بحث بالكل</option>
-                                @if(@isset($account_type) && !@empty($account_type) )
-                                @foreach ($account_type as $info )
-                                <option  value="{{$info->id}}">{{$info->name}}</option>
-                                @endforeach
-                                @endif
-                               </select>
-
-                             </div>
-                             </div>
-                             <div class="col-md-4">
-                                <div class="form-group">
-                                   <label for="is_parent_search">  هل الحساب أب</label>
-                                  <select name="is_parent_search" id="is_parent_search" class="form-control" >
-                                    <option value="all"> بحث بالكل</option>
-                                    <option  value="1"> نعم</option>
-                                    <option  value="0"> لا </option>
-                                  </select>
-
-                                </div>
-                                </div>
-
-
 
                         <div class="clearfix"></div>
                         <div class="col-md-12">
@@ -67,12 +41,11 @@
                                 <thead class="custom_thead">
 
                                     <th>اسم</th>
+                                    <th>الكود</th>
                                     <th>رقم الحساب</th>
-                                    <th>نوع الحساب</th>
-                                    <th>هل اب</th>
-                                    <th> الحساب الاب</th>
-                                      <th>الرصيد</th>
-                                    <th>حالة التفعيل</th>
+                                    <th> الرصيد</th>
+                                    <th> حالة التفعيل</th>
+
                                     <th></th>
                                     {{-- <th>تاريخ الاضافة</th>
                                     <th>تاريخ التحديث</th> --}}
@@ -81,16 +54,14 @@
                                     @foreach ($data as $info)
                                         <tr>
                                             <td>{{ $info->name }}</td>
-                                            <td>{{ $info->account_number }}</td>
-                                            <td>{{$info->account_types_name}}</td>
-                                            <td> @if ($info->is_parent == 1)نعم  @else  لا @endif</td>
-                                            <td>{{$info->parent_account_name}}</td>
+                                            <td>{{ $info->code }}</td>
+                                            <td>{{$info->account_number}}</td>
                                             <td></td>
-                                            <td> @if ($info->is_archived == 1)مفعلة  @else معطل @endif</td>
+                                            <td> @if ($info->active == 1)مفعلة  @else معطل @endif</td>
                                             <td>
-                                              <a href="{{route('admin.accounts.edit',$info->id)}}" class="btn btn-sm btn-primary">تعديل</a>
-                                                <a href="{{ route('admin.accounts.delete',$info->id) }}" class="btn btn-sm btn-danger are_you_sure">حذف</a>
-                                                <a href="{{ route('admin.accounts.show',$info->id) }}" class="btn btn-sm btn-info ">عرض</a>
+                                              <a href="{{route('admin.customer.edit',$info->id)}}" class="btn btn-sm btn-primary">تعديل</a>
+                                                <a href="{{ route('admin.customer.delete',$info->id) }}" class="btn btn-sm btn-danger are_you_sure">حذف</a>
+                                                <a href="{{ route('admin.customer.show',$info->id) }}" class="btn btn-sm btn-info ">عرض</a>
                                             </td>
 
 
