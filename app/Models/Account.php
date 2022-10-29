@@ -15,6 +15,9 @@ class Account extends Model
  public function Account_type(){
     return $this->belongsTo(AccountsType::class);
  }
+ public function customers(){
+    return $this->hasMany(Customer::class,'account_number','id');
+}
 
 
 

@@ -25,7 +25,7 @@
                         <div class="col-md-4">
 
                             <input  type="radio" checked name="searchbyradio" id="searchbyradio" value="account_number">بحث برقم الحساب
-                            <input  type="radio" checked name="searchbyradio" id="searchbyradio" value="customer_code">بحث برقم العميل
+                            <input  type="radio"  name="searchbyradio" id="searchbyradio" value="customer_code">بحث بكود العميل
                             <input  type="radio" name="searchbyradio" id="searchbyradio" value="name">بالاسم
                             <input style="margin-top: 8px !important;" type="text" id="search_by_text" class="form-control" placeholder=" -كود العميل اسم- رقم الحساب"> <br>
                         </div>

@@ -1,15 +1,14 @@
-@if (@isset($data) && !@empty($data))
+@if (@isset($data) && !@empty($data) && count($data)>0)
 
 <table id="example2" class="table table-bordered table-hover">
     <thead class="custom_thead">
 
         <th>اسم</th>
+        <th>الكود</th>
         <th>رقم الحساب</th>
-        <th>نوع الحساب</th>
-        <th>هل اب</th>
-        <th> الحساب الاب</th>
-          <th>الرصيد</th>
-        <th>حالة التفعيل</th>
+        <th> الرصيد</th>
+        <th> حالة التفعيل</th>
+
         <th></th>
         {{-- <th>تاريخ الاضافة</th>
         <th>تاريخ التحديث</th> --}}
@@ -18,16 +17,14 @@
         @foreach ($data as $info)
             <tr>
                 <td>{{ $info->name }}</td>
-                <td>{{ $info->account_number }}</td>
-                <td>{{$info->account_types_name}}</td>
-                <td> @if ($info->is_parent == 1)نعم  @else  لا @endif</td>
-                <td>{{$info->parent_account_name}}</td>
+                <td>{{ $info->customer_code}}</td>
+                <td>{{$info->account_number}}</td>
                 <td></td>
-                <td> @if ($info->is_archived == 1)مفعلة  @else معطل @endif</td>
+                <td> @if ($info->active == 1)مفعلة  @else معطل @endif</td>
                 <td>
-                  <a href="{{route('admin.accounts.edit',$info->id)}}" class="btn btn-sm btn-primary">تعديل</a>
-                    <a href="{{ route('admin.accounts.delete',$info->id) }}" class="btn btn-sm btn-danger are_you_sure">حذف</a>
-                    <a href="{{ route('admin.accounts.show',$info->id) }}" class="btn btn-sm btn-info ">عرض</a>
+                  <a href="{{route('admin.customer.edit',$info->id)}}" class="btn btn-sm btn-primary">تعديل</a>
+                    <a href="{{ route('admin.customer.delete',$info->id) }}" class="btn btn-sm btn-danger are_you_sure">حذف</a>
+                    <a href="{{ route('admin.customer.show',$info->id) }}" class="btn btn-sm btn-info ">عرض</a>
                 </td>
 
 
@@ -70,9 +67,7 @@
     </tbody>
 </table>
 <br>
-<div class="col-md-12" id="ajax_pagination_in_search">
-    {{ $data->links() }}
-</div>
+{{ $data->links() }}
 @else
 <div class="alert alert-danger"> عفوا لا توجد بيانات لعرضها !!</div>
 

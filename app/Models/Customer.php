@@ -12,4 +12,7 @@ class Customer extends Model
 
        'name','account_number','start_balance','start_balance_status','added_by','date','updated_by','com_code','active','current_balance','notes','customer_code','city_id','address'
     ];
+    public function account(){
+        return $this->hasOne(Account::class,'account_number','id');
+    }
 }

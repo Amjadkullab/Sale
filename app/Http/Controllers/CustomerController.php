@@ -41,9 +41,9 @@ class CustomerController extends Controller
 public function store(CustomerRequest $request){
     try{
     $com_code = auth()->user()->com_code;
-    $checkExists = Customer::where(['name'=>$request->name , 'com_code'=>$com_code])->first();
-    if($checkExists != null){
-        return redirect()->route('admin.customer.index')->with(['error'=>'عفوا اسم العميل موجود من  قبل']);
+    $checkExists_name = Customer::select('id')->where(['name'=>$request->name , 'com_code'=>$com_code])->first();
+    if( $checkExists_name != null){
+        return redirect()->back()->with(['error'=>'عفوا اسم العميل موجود من  قبل'])->withInput();
     }
     $row = Customer::select('customer_code')->where(['com_code'=>$com_code])->orderby('id','DESC')->first();
     if(!empty($row)){
@@ -89,7 +89,6 @@ public function store(CustomerRequest $request){
     $data_insert['date']=date('Y-m-d');
    $flag = Customer::create($data_insert);
    if($flag){
-
     $data_insert_account['name'] = $request->name;
     $data_insert_account['start_balance_status']=$request->start_balance_status;
     if( $data_insert_account['start_balance_status']==1){
@@ -107,9 +106,10 @@ public function store(CustomerRequest $request){
         $data_insert_account['start_balance_status']=3 ;
         $data_insert_account['start_balance'] = 0 ;
     }
-    $customer_parent_account_number = Admin_panel_setting::where(['com_code'=>$com_code])->value("customer_parent_account_number");
+    $customer_parent_account_number = Admin_panel_setting::where(['com_code'=>$com_code])->value('customer_parent_account_number');
     $data_insert_account['parent_account_number']=$customer_parent_account_number;
     $data_insert_account['is_parent']=0;
+    $data_insert_account['account_number'] = $data_insert['account_number'];
     $data_insert_account['notes']=$request->notes;
     $data_insert_account['account_number']=$request->account_number;
     $data_insert_account['account_types_id ']=3;
@@ -119,7 +119,7 @@ public function store(CustomerRequest $request){
     $data_insert_account['com_code']=$com_code;
     $data_insert_account['date']=date('Y-m-d');
     $data_insert_account['other_table_FK'] = $data_insert['customer_code'];
-    $flag = Account::create($data_insert_account);
+   Account::create($data_insert_account);
    }
     return redirect()->route('admin.customer.index')->with(['success' => 'لقد تم اضافة البيانات بنجاح']);
     }catch(\Exception $ex){
@@ -149,21 +149,16 @@ public function update($id,CustomerEditRequest $request ){
         return redirect()->back()->with(['error'=>'عفوا اسم الحساب موجود من قبل'])->withInput();
     }
     $data_to_update['name'] = $request->name;
-    $data_to_update['address'] = $request->address;
-    $data_to_update['notes'] = $request->notes;
-
-    $data_to_update['notes']=$request->notes;
-    $data_to_update['is_archived']=$request->is_archived;
-    $data_to_update['active']=$request->active;
-        $data_to_update['updated_at'] = date('Y-m-d H:s');
-        $data_to_update['updated_by'] = auth()->user()->id;
-        $data_to_update['date'] = date('Y-m-d');
-        $data_to_update['com_code'] = $com_code;
+      $data_to_update['address'] = $request->address;
+      $data_to_update['notes'] = $request->notes;
+      $data_to_update['active'] = $request->active;
+      $data_to_update['updated_by'] = auth()->user()->id;
+      $data_to_update['updated_at'] = date("Y-m-d H:i:s");
        $flag= Customer::where(['id'=>$id , 'com_code'=>$com_code])->update($data_to_update);
        if($flag){
         $data_to_update_account['name'] = $request->name;
-        $data_to_update_account['updated_at'] = date('Y-m-d H:s');
         $data_to_update_account['updated_by'] = auth()->user()->id;
+        $data_to_update_account['updated_at'] = date("Y-m-d H:i:s");
         $flag= Account::where(['account_number'=>$data['account_number'] , 'other_table_FK'=>$data['customer_code'] ,'account_type'=> 3,'com_code'=>$com_code])->update($data_to_update_account);
 
 
@@ -203,11 +198,55 @@ public function delete($id){
       }
 
      }
+ public function ajax_search (Request $request){
+
+  if($request->ajax()){
+    $com_code = auth()->user()->com_code;
+
+    $search_by_text = $request->search_by_text ;
+    $searchbyradio = $request->searchbyradio ;
 
 
 
 
+    if ($search_by_text != '') {
+
+        if ($searchbyradio == 'customer_code') {
+
+          $field1 = "customer_code";
+          $operator1 = "=";
+          $value1 = $search_by_text;
+        } elseif ($searchbyradio == 'account_number') {
+
+          $field1 = "account_number";
+          $operator1 = "=";
+          $value1 = $search_by_text;
+        } else {
+          $field1 = "name";
+          $operator1 = "like";
+          $value1 = "%{$search_by_text}%";
+        }
+      } else {
+        //true
+        $field1 = "id";
+        $operator1 = ">";
+        $value1 = 0;
+      }
 
 
+      $data = Customer::where($field1, $operator1, $value1)->where(['com_code'=>$com_code])->orderBy('id', 'DESC')->paginate(PAGINATION_COUNT);
+      if (!empty($data)) {
+        foreach ($data as $info) {
+          $info->added_by_admin = Admin::where('id', $info->added_by)->value('name');
+          if ($info->updated_by > 0 and $info->updated_by != null) {
+            $info->updated_by_admin = Admin::where('id', $info->updated_by)->value('name');
+          }
+        }
+      }
 
-}
+      return view('admin.customers.ajax_search', ['data' => $data]);
+    }
+  }
+
+  }
+

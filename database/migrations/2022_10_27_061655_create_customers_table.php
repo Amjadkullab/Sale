@@ -17,16 +17,19 @@ return new class extends Migration
 
             $table->id();
             $table->string('name',225);
-            $table->integer('account_number');// رقم الحساب المالي على مستوى الشركة
-            $table->decimal('start_balance'); // رصيد ابتدائي// دائن او مدين او متزن او المدة
+            $table->foreignId('account_number')->constrained('accounts');
+            $table->bigInteger('customer_code');// رقم الحساب المالي على مستوى الشركة
+            $table->decimal('start_balance');// رصيد ابتدائي// دائن او مدين او متزن او المدة
             $table->tinyInteger('start_balance_status'); // رصيد ابتدائي// دائن او مدين او متزن او المدة
-            $table->integer('added_by');
-            $table->dateTime('date');
-            $table->integer('updated_by')->nullable();
-            $table->integer('com_code');
-            $table->tinyInteger('is_archived')->default(1);
             $table->decimal('current_balance');// رصيد الحساب الحالي
-            $table->string('notes');
+            $table->string('notes')->nullable();
+            $table->integer('added_by');
+            $table->integer('updated_by')->nullable();
+            $table->dateTime('date');
+            $table->tinyInteger('active')->default(0);
+            $table->integer('com_code');
+            $table->integer('city_id')->nullable();
+            $table->string('address')->nullable();
             $table->timestamps();
 
         });

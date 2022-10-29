@@ -44,9 +44,9 @@ use Illuminate\Support\Facades\Config;
 //   $flag = $model::create($arrayToInsert);
 //   return $flag;
 // }
-// function get_field_value($model, $field_name , $where = array())
-// {
-//   $data = $model::where($where)->value($field_name);
-//   return $data;
-// }
+function get_field_value($model, $field_name , $where = array())
+{
+  $data = $model::where($where)->value($field_name);
+  return $data;
+}
 
