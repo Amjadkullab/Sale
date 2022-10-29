@@ -25,7 +25,7 @@
                         <div class="col-md-4">
 
                             <input  type="radio" checked name="searchbyradio" id="searchbyradio" value="account_number">بحث برقم الحساب
-                            <input  type="radio" checked name="searchbyradio" id="searchbyradio" value="code">بحث برقم العميل
+                            <input  type="radio" checked name="searchbyradio" id="searchbyradio" value="customer_code">بحث برقم العميل
                             <input  type="radio" name="searchbyradio" id="searchbyradio" value="name">بالاسم
                             <input style="margin-top: 8px !important;" type="text" id="search_by_text" class="form-control" placeholder=" -كود العميل اسم- رقم الحساب"> <br>
                         </div>
@@ -54,7 +54,7 @@
                                     @foreach ($data as $info)
                                         <tr>
                                             <td>{{ $info->name }}</td>
-                                            <td>{{ $info->code }}</td>
+                                            <td>{{ $info->customer_code}}</td>
                                             <td>{{$info->account_number}}</td>
                                             <td></td>
                                             <td> @if ($info->active == 1)مفعلة  @else معطل @endif</td>
@@ -116,6 +116,6 @@
     </div>
 @endsection
 @section('script')
-<script src="{{asset('admin_assets/js/accounts.js')}}"></script>
+<script src="{{asset('admin_assets/js/customers.js')}}"></script>
 
 @endsection

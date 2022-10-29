@@ -30,17 +30,17 @@
                         @enderror
                     </div>
                     </div>
-                    <div class="col-md-6">
+                    {{-- <div class="col-md-6">
                       <div class="form-group">
-                       <label for="code"> كود  العميل</label>
-                       <input  name="code" id="code" class="form-control" value="{{old('code')}}"  >
-                        @error('code')
+                       <label for="customer_code  "> كود  العميل</label>
+                       <input  name="customer_code" id="customer_code" class="form-control" value="{{old('customer_code')}}"  >
+                        @error('customer_code')
                         <span class="text-danger" >{{ $message }}</span>
                         @enderror
                     </div>
-                    </div>
+                    </div> --}}
 
-                    <div class="col-md-6">
+                    {{-- <div class="col-md-6">
                     <div class="form-group">
                         <label for="account_types_id">  نوع الحساب</label>
                        <select name="account_types_id" id="account_types_id" class="form-control" >
@@ -55,7 +55,7 @@
                          <span class="text-danger" >{{ $message }}</span>
                          @enderror
                      </div>
-                     </div>
+                     </div> --}}
 
                          <div class="col-md-6">
                             <div class="form-group">
@@ -103,7 +103,7 @@
                         <label for="active"> حالة التفعيل</label>
                        <select name="active" id="active" class="form-control" >
                          <option value="">اختر الحالة</option>
-                         <option @if (old('active')==1) selected = "selected" @endif  value="1"> مفعل</option>
+                         <option @if (old('active')==1 || old('active')=="") selected = "selected" @endif  value="1"> مفعل</option>
                          <option @if (old('active')==0 and old('active')!= "") selected = "selected" @endif value="0"> معطل </option>
                        </select>
                          @error('active')
@@ -118,7 +118,7 @@
                     <div class="col-md-12">
                      <div class="form-group text-center">
                         <button id="do_add_item_dd" type="submit" class="btn btn-sm btn-primary"> اضافة</button>
-                        <a href="{{ route('admin.accounts.index') }}" class="btn btn-sm btn-danger" >الغاء</a>
+                        <a href="{{ route('admin.customer.index') }}" class="btn btn-sm btn-danger" >الغاء</a>
                       </div>
                       </div>
 
@@ -136,7 +136,7 @@
 
 
 @section('script')
-<script src="{{ asset('admin_assets/js/accounts.js')}}"></script>
+<script src="{{ asset('admin_assets/js/customers.js')}}"></script>
 
 
 

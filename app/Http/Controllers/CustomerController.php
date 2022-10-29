@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CustomerEditRequest;
 use App\Models\Admin;
 use App\Models\Account;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use App\Http\Requests\CustomerRequest;
+use App\Models\Admin_panel_setting;
 
 class CustomerController extends Controller
 {
@@ -39,6 +41,10 @@ class CustomerController extends Controller
 public function store(CustomerRequest $request){
     try{
     $com_code = auth()->user()->com_code;
+    $checkExists = Customer::where(['name'=>$request->name , 'com_code'=>$com_code])->first();
+    if($checkExists != null){
+        return redirect()->route('admin.customer.index')->with(['error'=>'عفوا اسم العميل موجود من  قبل']);
+    }
     $row = Customer::select('customer_code')->where(['com_code'=>$com_code])->orderby('id','DESC')->first();
     if(!empty($row)){
         $data_insert['customer_code']=$row['customer_code']+1;
@@ -52,10 +58,7 @@ public function store(CustomerRequest $request){
             }else{
                 $data_insert['account_number']=1;
             }
-    $checkExists = Customer::where(['name'=>$request->name , 'com_code'=>$com_code]);
-    if($checkExists != null){
-        return redirect()->route('admin.customer.index')->with(['error'=>'عفوا اسم العميل موجود من  قبل']);
-    }
+
 
 
     $data_insert['name'] = $request->name;
@@ -73,10 +76,12 @@ public function store(CustomerRequest $request){
         $data_insert['start_balance'] = 0 ;
 
     }else{
-        $data_insert['start_balance_status']==3 ;
+        $data_insert['start_balance_status']= 3 ;
         $data_insert['start_balance'] = 0 ;
     }
+
     $data_insert['notes']=$request->notes;
+
     $data_insert['active']=$request->active;
     $data_insert['created_at']=date('Y-m-d H:i:s');
     $data_insert['added_by']=auth()->user()->id;
@@ -86,7 +91,6 @@ public function store(CustomerRequest $request){
    if($flag){
 
     $data_insert_account['name'] = $request->name;
-
     $data_insert_account['start_balance_status']=$request->start_balance_status;
     if( $data_insert_account['start_balance_status']==1){
         $data_insert_account['start_balance']=$request->start_balance*(-1);
@@ -100,43 +104,105 @@ public function store(CustomerRequest $request){
         $data_insert_account['start_balance'] = 0 ;
 
     }else{
-        $data_insert_account['start_balance_status']==3 ;
+        $data_insert_account['start_balance_status']=3 ;
         $data_insert_account['start_balance'] = 0 ;
     }
+    $customer_parent_account_number = Admin_panel_setting::where(['com_code'=>$com_code])->value("customer_parent_account_number");
+    $data_insert_account['parent_account_number']=$customer_parent_account_number;
+    $data_insert_account['is_parent']=0;
     $data_insert_account['notes']=$request->notes;
     $data_insert_account['account_number']=$request->account_number;
     $data_insert_account['account_types_id ']=3;
-    $data_insert_account['is_archived']=$request->is_archived;
+    $data_insert_account['is_archived']=$request->active;
     $data_insert_account['created_at']=date('Y-m-d H:i:s');
     $data_insert_account['added_by']=auth()->user()->id;
     $data_insert_account['com_code']=$com_code;
     $data_insert_account['date']=date('Y-m-d');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    $data_insert_account['other_table_FK'] = $data_insert['customer_code'];
+    $flag = Account::create($data_insert_account);
    }
     return redirect()->route('admin.customer.index')->with(['success' => 'لقد تم اضافة البيانات بنجاح']);
-
-
-
-
     }catch(\Exception $ex){
 
         return redirect()->back()->with(['error'=>'عفوا حدث خطأ ما '.$ex->getMessage()]);
     }
 
 }
+public function edit($id){
+    $com_code = Auth()->user()->com_code;
+    $data = Customer::select()->where(['com_code'=>$com_code,'id'=>$id])->first();
+
+    return view('admin.customers.edit',['com_code'=> $com_code,'data'=>$data]);
+}
+public function update($id,CustomerEditRequest $request ){
+
+
+    try{
+        $com_code = auth()->user()->com_code;
+        $data = Customer::select('id','account_number','customer_code')->where(['com_code'=>$com_code,'id'=>$id])->get();
+        if(empty($data)){
+            return redirect()->route('admin.customer.index')->with(['error'=>'غير قادر على الوصول الى البيانات المطلوبة']);
+        }
+
+    $checkExists = Customer::where(['name'=>$request->name ,'com_code'=>$com_code])->where('id','!=',$id)->first();
+    if(!empty($checkExists)){
+        return redirect()->back()->with(['error'=>'عفوا اسم الحساب موجود من قبل'])->withInput();
+    }
+    $data_to_update['name'] = $request->name;
+    $data_to_update['address'] = $request->address;
+    $data_to_update['notes'] = $request->notes;
+
+    $data_to_update['notes']=$request->notes;
+    $data_to_update['is_archived']=$request->is_archived;
+    $data_to_update['active']=$request->active;
+        $data_to_update['updated_at'] = date('Y-m-d H:s');
+        $data_to_update['updated_by'] = auth()->user()->id;
+        $data_to_update['date'] = date('Y-m-d');
+        $data_to_update['com_code'] = $com_code;
+       $flag= Customer::where(['id'=>$id , 'com_code'=>$com_code])->update($data_to_update);
+       if($flag){
+        $data_to_update_account['name'] = $request->name;
+        $data_to_update_account['updated_at'] = date('Y-m-d H:s');
+        $data_to_update_account['updated_by'] = auth()->user()->id;
+        $flag= Account::where(['account_number'=>$data['account_number'] , 'other_table_FK'=>$data['customer_code'] ,'account_type'=> 3,'com_code'=>$com_code])->update($data_to_update_account);
+
+
+
+       }
+        return redirect()->route('admin.customer.index')->with(['success' => 'لقد تم تحديث البيانات بنجاح']);
+    }
+    catch(\Exception $ex){
+        return redirect()->back()->with(['error'=>'عفوا حدثث خطأ ما'.$ex->getMessage()])->withinput();
+    }
+
+
+
+}
+public function delete($id){
+    $com_code = auth()->user()->com_code;
+      $row = Customer::select('name')->where(['id'=>$id,'com_code'=>$com_code]);
+      try{
+       if(!empty($row)){
+           $flag = $row->delete();
+         if($flag){
+           return redirect()->back()->with(['success'=>'تم حذف البيانات بنجاح ']);
+         }else{
+
+           return redirect()->back()->with(['error'=>'عفوا حدث خطا ما']);
+
+         }
+
+
+           }else{
+               return redirect()->back()->with(['error'=>'غير قادر على الوصول الى البيانات المطلوبة']);
+           }
+
+
+      } catch(\Exception $ex){
+              return redirect()->back()->with(['error'=>'عفوا حدث خطأ ما'.$ex->getMessage()]);
+      }
+
+     }
 
 
 

@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\AccountRequestUpdate;
-use App\Http\Requests\AccountsRequest;
 use App\Models\Admin;
 use App\Models\Account;
+use App\Models\Customer;
 use App\Models\AccountsType;
 use Illuminate\Http\Request;
+use App\Http\Requests\AccountsRequest;
+use App\Http\Requests\AccountRequestUpdate;
 
 class AccountsController extends Controller
 {
@@ -105,7 +106,7 @@ class AccountsController extends Controller
     public function edit($id){
         $com_code = Auth()->user()->com_code;
         $data = Account::select()->where(['com_code'=>$com_code,'id'=>$id])->first();
-        $account_type = AccountsType::select('id','name')->where(['active'=>1,'relatediternalaccounts'=>0])->orderby('id','ASC')->get();
+        $account_type = AccountsType::select('id','name')->where(['active'=>1])->orderby('id','ASC')->get();
         $parent_accounts = Account::select('account_number','name')->where(['is_parent'=>1,'com_code'=>$com_code])->orderby('id','ASC')->get();
         return view('admin.accounts.edit',['com_code'=> $com_code,'data'=>$data,'account_type'=>$account_type ,'parent_accounts'=>$parent_accounts]);
     }
@@ -117,7 +118,7 @@ class AccountsController extends Controller
 
         try{
             $com_code = auth()->user()->com_code;
-            $data = Account::select('id')->where(['com_code'=>$com_code,'id'=>$id])->get();
+            $data = Account::select('id','account_number','other_table_FK','account_type')->where(['com_code'=>$com_code,'id'=>$id])->get();
             if(empty($data)){
                 return redirect()->route('admin.accounts.index')->with(['error'=>'غير قادر على الوصول الى البيانات المطلوبة']);
             }
@@ -138,7 +139,17 @@ class AccountsController extends Controller
             $data_to_update['updated_by'] = auth()->user()->id;
             $data_to_update['date'] = date('Y-m-d');
             $data_to_update['com_code'] = $com_code;
-            Account::where(['id'=>$id , 'com_code'=>$com_code])->update($data_to_update);
+             $flag=Account::where(['id'=>$id , 'com_code'=>$com_code])->update($data_to_update);
+             if($flag){
+                if($data['account_type']==3){
+                  //update customer table row
+                  $data_to_update_customer['name'] = $request->name;
+                  $data_to_update_customer['updated_by'] = auth()->user()->id;
+                  $data_to_update_customer['updated_at'] = date("Y-m-d H:i:s");
+
+               Customer::where(['account_number'=>$data['account_number'] ,"customer_code"=>$data['other_table_FK'] ,'com_code'=>$com_code])->update($data_to_update_customer);
+                }
+               }
             return redirect()->route('admin.accounts.index')->with(['success' => 'لقد تم تحديث البيانات بنجاح']);
         }
         catch(\Exception $ex){
