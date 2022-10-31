@@ -67,7 +67,9 @@
     </tbody>
 </table>
 <br>
+<div class="col-md-12" id="ajax_pagination_in_search">
 {{ $data->links() }}
+</div>
 @else
 <div class="alert alert-danger"> عفوا لا توجد بيانات لعرضها !!</div>
 

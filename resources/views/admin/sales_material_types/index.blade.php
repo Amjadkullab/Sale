@@ -13,7 +13,7 @@
                 <div class="card-header">
                     <h3 class="card-title card_title_center">بيانات فئات الفواتير</h3>
                     <input type="hidden" id="search_token" value="{{csrf_token() }}">
-                    <input type="hidden" id="ajax_search_url" value="{{route('admin.treasuries.ajax_search')}}">
+                    <input type="hidden" id="ajax_search_url" value="{{route('admin.sales_material_type.ajax_search')}}">
                 <a href="{{ route('admin.sales_material_type.create') }}" class="btn btn-sm btn-success">اضافة جديد</a>
 
                 </div>

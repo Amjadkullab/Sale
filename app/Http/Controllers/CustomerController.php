@@ -52,7 +52,7 @@ public function store(CustomerRequest $request){
             $data_insert['customer_code']=1;
         }
 
-        $row = Account::select('account_number')->where(['com_code'=>$com_code])->orderby('id','DESC')->first();
+        $row = Customer::select('account_number')->where(['com_code'=>$com_code])->orderby('id','DESC')->first();
         if(!empty($row)){
             $data_insert['account_number']=$row['account_number']+1;
             }else{
@@ -203,28 +203,28 @@ public function delete($id){
   if($request->ajax()){
     $com_code = auth()->user()->com_code;
 
-    $search_by_text = $request->search_by_text ;
+    $searchbytext = $request->searchbytext ;
     $searchbyradio = $request->searchbyradio ;
 
 
 
 
-    if ($search_by_text != '') {
+    if ($searchbytext != '') {
 
         if ($searchbyradio == 'customer_code') {
 
           $field1 = "customer_code";
           $operator1 = "=";
-          $value1 = $search_by_text;
+          $value1 = $searchbytext;
         } elseif ($searchbyradio == 'account_number') {
 
           $field1 = "account_number";
           $operator1 = "=";
-          $value1 = $search_by_text;
+          $value1 = $searchbytext;
         } else {
           $field1 = "name";
           $operator1 = "like";
-          $value1 = "%{$search_by_text}%";
+          $value1 = "%{$searchbytext}%";
         }
       } else {
         //true

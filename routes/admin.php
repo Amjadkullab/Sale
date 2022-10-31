@@ -14,6 +14,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\InvItemcardCategorieController;
 use App\Http\Controllers\InvItemCardController;
 use App\Http\Controllers\Sales_material_typesController;
+use App\Http\Controllers\SupplierCategoriesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,7 +26,7 @@ use App\Http\Controllers\Sales_material_typesController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-define('PAGINATION_COUNT', 1);
+define('PAGINATION_COUNT', 4);
 // Route::get('/', function () {
 //     return view('welcome');
 // });
@@ -122,7 +123,14 @@ Route::get('/inv_itemcard/show/{id}',[InvItemCardController::class,'show'])->nam
 
 //end customer
 
-
+//start supplier_catigories
+Route::get('/supplier_categories/index',[SupplierCategoriesController::class,'index'])->name('admin.supplier_categories.index');
+Route::get('/supplier_categories/create',[SupplierCategoriesController::class,'create'])->name('admin.supplier_categories.create');
+Route::post('/supplier_categories/store',[SupplierCategoriesController::class,'store'])->name('admin.supplier_categories.store');
+Route::get('/supplier_categories/edit/{id}',[SupplierCategoriesController::class,'edit'])->name('admin.supplier_categories.edit');
+Route::post('/supplier_categories/update/{id}',[SupplierCategoriesController::class,'update'])->name('admin.supplier_categories.update');
+Route::get('/supplier_categories/delete/{id}',[SupplierCategoriesController::class,'delete'])->name('admin.supplier_categories.delete');
+//end supplier_catigories
 
 
 });
