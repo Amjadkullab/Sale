@@ -42,8 +42,13 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="width30"> اسم الحساب المالي للموردين الاب</td>
+                                    <td class="width30"> اسم الحساب المالي للعملاء الاب</td>
                                     <td>  {{ $data['customer_parent_account_number_name']}}  رقم الحساب المالي  ({{ $data['customer_parent_account_number'] }})
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="width30"> اسم الحساب المالي للموردين الاب</td>
+                                    <td>  {{ $data['supplier_parent_account_name']}}  رقم الحساب المالي  ({{ $data['supplier_parent_account_number'] }})
                                     </td>
                                 </tr>
                                 <tr>

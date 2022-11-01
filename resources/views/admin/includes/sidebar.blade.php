@@ -56,8 +56,8 @@
                 </ul>
               </li>
 
-              <li class="nav-item has-treeview {{(request()->is('admin/accounttypes*')||request()->is('admin/accounts*')||request()->is('admin/customer*')||request()->is('admin/supplier_categories*')) ? 'menu-open':'' }}">
-                <a href="#" class="nav-link {{(request()->is('admin/accounttypes*')||request()->is('admin/accounts*')||request()->is('admin/customer*')||request()->is('admin/supplier_categories*')) ? 'active':'' }}">
+              <li class="nav-item has-treeview {{(request()->is('admin/accounttypes*')||request()->is('admin/accounts*')||request()->is('admin/customer*')||request()->is('admin/supplier_categories*')||request()->is('admin/supplier*')) ? 'menu-open':'' }}">
+                <a href="#" class="nav-link {{(request()->is('admin/accounttypes*')||request()->is('admin/accounts*')||request()->is('admin/customer*')||request()->is('admin/supplier_categories*')||request()->is('admin/supplier*')) ? 'active':'' }}">
                   <i class="nav-icon fas fa-tachometer-alt"></i>
                   <p>
                     الحسابات
@@ -97,6 +97,15 @@
 
                           <p>
                             فئة الموردين
+
+                          </p>
+                        </a>
+                    </li>
+                  <li class="nav-item">
+                    <a href="{{ route('admin.supplier.index') }}" class="nav-link {{ (request()->is('admin/supplier*') and !request()->is('admin/supplier_categories*')) ? 'active':'' }}">
+
+                          <p>
+                             حسابات الموردين
 
                           </p>
                         </a>

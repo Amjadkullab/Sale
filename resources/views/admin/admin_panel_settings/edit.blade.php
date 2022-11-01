@@ -47,11 +47,25 @@
                             <option value="">اختر الحساب </option>
                             @if(@isset($parent_accounts) && !@empty($parent_accounts) )
                             @foreach ($parent_accounts as $info )
-                            <option @if (old('customer_parent_account_number')==$info->account_number) selected = "selected" @endif  value="{{$info->account_number}}">{{$info->name}}</option>
+                            <option @if (old('customer_parent_account_number',$data['customer_parent_account_number'])==$info->account_number) selected = "selected" @endif  value="{{$info->account_number}}">{{$info->name}}</option>
                             @endforeach
                             @endif
                            </select>
                              @error('customer_parent_account_number ')
+                             <span class="text-danger" >{{ $message }}</span>
+                             @enderror
+                         </div>
+                        <div class="form-group">
+                            <label for="supplier_parent_account_number">  الحساب الأب للموردين بالشجرة المحاسبية </label>
+                           <select name="supplier_parent_account_number" id="supplier_parent_account_number" class="form-control" >
+                            <option value="">اختر الحساب </option>
+                            @if(@isset($parent_accounts) && !@empty($parent_accounts) )
+                            @foreach ($parent_accounts as $info )
+                            <option @if (old('supplier_parent_account_number',$data['supplier_parent_account_number'])==$info->account_number) selected = "selected" @endif  value="{{$info->account_number}}">{{$info->name}}</option>
+                            @endforeach
+                            @endif
+                           </select>
+                             @error('supplier_parent_account_number ')
                              <span class="text-danger" >{{ $message }}</span>
                              @enderror
                          </div>

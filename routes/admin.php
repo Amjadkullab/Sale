@@ -15,6 +15,7 @@ use App\Http\Controllers\InvItemcardCategorieController;
 use App\Http\Controllers\InvItemCardController;
 use App\Http\Controllers\Sales_material_typesController;
 use App\Http\Controllers\SupplierCategoriesController;
+use App\Http\Controllers\SupplierController;
 
 /*
 |--------------------------------------------------------------------------
@@ -131,6 +132,17 @@ Route::get('/supplier_categories/edit/{id}',[SupplierCategoriesController::class
 Route::post('/supplier_categories/update/{id}',[SupplierCategoriesController::class,'update'])->name('admin.supplier_categories.update');
 Route::get('/supplier_categories/delete/{id}',[SupplierCategoriesController::class,'delete'])->name('admin.supplier_categories.delete');
 //end supplier_catigories
+ //start suupllier
+ Route::get('/supplier/index',[SupplierController::class,'index'])->name('admin.supplier.index');
+ Route::get('/supplier/create',[SupplierController::class,'create'])->name('admin.supplier.create');
+ Route::post('/supplier/store',[SupplierController::class,'store'])->name('admin.supplier.store');
+ Route::get('/supplier/edit/{id}',[SupplierController::class,'edit'])->name('admin.supplier.edit');
+ Route::post('/supplier/update/{id}',[SupplierController::class,'update'])->name('admin.supplier.update');
+ Route::get('/supplier/delete/{id}',[SupplierController::class,'delete'])->name('admin.supplier.delete');
+ Route::post('/supplier/ajax_search',[SupplierController::class,'ajax_search'])->name('admin.supplier.ajax_search');
+ Route::get('/supplier/show/{id}',[SupplierController::class,'show'])->name('admin.supplier.show');
+
+//end suplier
 
 
 });
