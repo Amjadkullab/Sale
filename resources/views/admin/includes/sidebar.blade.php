@@ -56,8 +56,8 @@
                 </ul>
               </li>
 
-              <li class="nav-item has-treeview {{(request()->is('admin/accounttypes*')||request()->is('admin/accounts*')||request()->is('admin/customer*')||request()->is('admin/supplier_categories*')||request()->is('admin/supplier*')) ? 'menu-open':'' }}">
-                <a href="#" class="nav-link {{(request()->is('admin/accounttypes*')||request()->is('admin/accounts*')||request()->is('admin/customer*')||request()->is('admin/supplier_categories*')||request()->is('admin/supplier*')) ? 'active':'' }}">
+              <li class="nav-item has-treeview {{((request()->is('admin/accounttypes*')||request()->is('admin/accounts*')||request()->is('admin/customer*')||request()->is('admin/supplier_categories*')||request()->is('admin/supplier*')) && !request()->is('admin/supplier_order*') ) ? 'menu-open':'' }}">
+                <a href="#" class="nav-link {{((request()->is('admin/accounttypes*')||request()->is('admin/accounts*')||request()->is('admin/customer*')||request()->is('admin/supplier_categories*')||request()->is('admin/supplier*')) && !request()->is('admin/supplier_order*')) ? 'active':'' }}">
                   <i class="nav-icon fas fa-tachometer-alt"></i>
                   <p>
                     الحسابات

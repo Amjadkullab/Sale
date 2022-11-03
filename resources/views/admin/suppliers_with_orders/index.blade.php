@@ -10,7 +10,7 @@
 
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title card_title_center">    فواتير المشتريات من الموردين</h3>
+            <h3 class="card-title card_title_center">    فواتير المشتريات </h3>
             <input type="hidden" id="search_token" value="{{csrf_token() }}">
             <input type="hidden" id="ajax_search_url" value="{{ route('admin.supplier_order.ajax_search') }}">
             <a href="{{ route('admin.supplier_order.create') }}" class="btn btn-sm btn-success">اضافة جديد</a>

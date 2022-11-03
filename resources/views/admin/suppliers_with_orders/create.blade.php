@@ -1,8 +1,8 @@
 @extends('layouts.master')
-@section('title', 'اضافة وحدة جديدة')
-@section('contentheader', ' الوحدات ')
+@section('title', ' المشتريات')
+@section('contentheader', 'حركات مخزنية')
 @section('contentheaderlink')
-    <a href="{{ route('admin.uoms.index') }}"> الوحدات</a>
+    <a href="{{ route('admin.supplier_order.index') }}"> فواتير المشتريات</a>
 @endsection
 @section('contentheaderactive', 'اضافة')
 
@@ -11,50 +11,71 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title card_title_center">اضافة وحدة جديدة</h3>
+                    <h3 class="card-title card_title_center">اضافة فاتورة مشتريات من مورد</h3>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
 
-                     <form action= {{ route('admin.uoms.store') }} method="POST" >
+                     <form action= {{ route('admin.supplier_order.store') }} method="POST" >
                       @csrf
 
-                      <div class="form-group">
-                       <label for="name">اسم الوحدة</label>
-                       <input  name="name" id="name" class="form-control" value="{{ old('name') }}" placeholder="أدخل اسم الوحدة" oninvalid="setCustomValidity('من فضلك أدخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}">
-                        @error('name')
-                        <span class="text-danger" >{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <label for="is_master"> نوع الوحدة</label>
-                       <select name="is_master" id="is_master" class="form-control" >
-                         <option value="">اختر النوع</option>
-                         <option @if (old('is_master')==1) selected = "selected" @endif  value="1"> وحدة أب</option>
-                         <option @if (old('is_master')== 0 and old('is_master')!= "") selected = "selected" @endif value="0"> وحدة تجزئة </option>
-                       </select>
-                         @error('is_master')
-                         <span class="text-danger" >{{ $message }}</span>
-                         @enderror
-                     </div>
-                     <div class="form-group">
-                        <label for="active"> حالة التفعيل</label>
-                       <select name="active" id="active" class="form-control" >
-                         <option value="">اختر الحالة</option>
-                         <option @if (old('active')==1) selected = "selected" @endif  value="1"> مفعل</option>
-                         <option @if (old('active')==0 and old('active')!= "") selected = "selected" @endif value="0"> معطل </option>
-                       </select>
-                         @error('active')
-                         <span class="text-danger" >{{ $message }}</span>
-                         @enderror
-                     </div>
 
+                      <div class="form-group">
+                        <label for="order_date">تاريخ الفاتورة </label>
+                        <input type="date" name="order_date" id="order_date" value="@php echo date("Y-m-d"); @endphp" class="form-control" style="text-align:right;direction:rtl!important;"  placeholder="أدخل  الملاحظات">
+                    @error('order_date')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+                      <div class="form-group">
+                        <label for="DOC_NO">رقم الفاتورة المسجل بأصل فاتورة المشتريات</label>
+                        <input type="text" name="DOC_NO" id="DOC_NO" value="{{ old('DOC_NO') }}" class="form-control" style="text-align:right;direction:rtl!important;"  placeholder="أدخل  الملاحظات">
+                    @error('DOC_NO')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+
+               <div class="col-md-6">
+                <div class="form-group">
+                    <label for="supplier_code">بيانات الموردين</label>
+                    <select name="supplier_code" id="supplier_code">
+            <option value="">اختر المورد</option>
+            @if(@isset($suppliers) && !empty($suppliers))
+                @foreach ($suppliers as $info )
+                 <option @if (old('supplier_code')==$info->supplier_code) selected="selected" @endif value="{{ $info->supplier_code }}">{{ $info->name }}</option>
+                @endforeach
+                    </select>
+                    @error('supplier_code')
+                    <span class="text-denger">{{ $messsage }}</span>
+                    @enderror
+                </div>
+               </div>
+
+
+                    <div class="form-group">
+                        <label for="pill_type"> نوع الفاتورة</label>
+                       <select name="pill_type" id="pill_type" class="form-control" >
+                         <option value="">اختر النوع</option>
+                         <option @if (old('pill_type')==1) selected = "selected" @endif  value="1"> كاش </option>
+                         <option @if (old('pill_type')== 2 )selected = "selected" @endif value="2">  أجل </option>
+                       </select>
+                         @error('pill_type')
+                         <span class="text-danger" >{{ $message }}</span>
+                         @enderror
+                     </div>
+                    <div class="form-group">
+                        <label for="notes">ملاحظات </label>
+                        <input type="text" name="notes" id="notes" value="{{ old('notes') }}" class="form-control" placeholder="أدخل  الملاحظات">
+                    @error('notes')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
 
                     </div>
 
                      <div class="form-group text-center">
                         <button type="submit" class="btn btn-sm btn-primary"> اضافة</button>
-                        <a href="{{ route('admin.uoms.index') }}" class="btn btn-sm btn-danger" >الغاء</a>
+                        <a href="{{ route('admin.supplier_order.index') }}" class="btn btn-sm btn-danger" >الغاء</a>
                       </div>
 
 
