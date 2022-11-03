@@ -52,7 +52,7 @@ public function store(CustomerRequest $request){
             $data_insert['customer_code']=1;
         }
 
-        $row = Customer::select('account_number')->where(['com_code'=>$com_code])->orderby('id','DESC')->first();
+        $row = Account::select('account_number')->where(['com_code'=>$com_code])->orderby('id','DESC')->first();
         if(!empty($row)){
             $data_insert['account_number']=$row['account_number']+1;
             }else{
@@ -62,7 +62,7 @@ public function store(CustomerRequest $request){
 
 
     $data_insert['name'] = $request->name;
-    $data_insert['adderss'] = $request->name;
+    $data_insert['adderss'] = $request->adderss;
     $data_insert['start_balance_status']=$request->start_balance_status;
     if( $data_insert['start_balance_status']==1){
         $data_insert['start_balance']=$request->start_balance*(-1);
@@ -109,17 +109,16 @@ public function store(CustomerRequest $request){
     $customer_parent_account_number = Admin_panel_setting::where(['com_code'=>$com_code])->value('customer_parent_account_number');
     $data_insert_account['parent_account_number']=$customer_parent_account_number;
     $data_insert_account['is_parent']=0;
-    $data_insert_account['account_number'] = $data_insert['account_number'];
+    $data_insert_account['account_number']=$data_insert['account_number'];
     $data_insert_account['notes']=$request->notes;
-    $data_insert_account['account_number']=$request->account_number;
     $data_insert_account['account_types_id ']=3;
     $data_insert_account['is_archived']=$request->active;
     $data_insert_account['created_at']=date('Y-m-d H:i:s');
     $data_insert_account['added_by']=auth()->user()->id;
     $data_insert_account['com_code']=$com_code;
     $data_insert_account['date']=date('Y-m-d');
-    $data_insert_account['other_table_FK'] = $data_insert['customer_code'];
-   Account::create($data_insert_account);
+    $data_insert_account['other_table_FK']=$data_insert['customer_code'];
+      Account::create($data_insert_account);
    }
     return redirect()->route('admin.customer.index')->with(['success' => 'لقد تم اضافة البيانات بنجاح']);
     }catch(\Exception $ex){

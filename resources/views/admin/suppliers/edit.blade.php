@@ -1,8 +1,8 @@
 @extends('layouts.master')
-@section('title', '   تعديل بيانات عميل')
-@section('contentheader', 'الحسابات المالية')
+@section('title', '  الموردين')
+@section('contentheader',  ' الحسابات ')
 @section('contentheaderlink')
-    <a href="{{ route('admin.customer.index') }}"> العملاء</a>
+    <a href="{{ route('admin.supplier.index') }}"> الموردين</a>
 @endsection
 @section('contentheaderactive', 'تعديل')
 
@@ -11,12 +11,12 @@
 
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title card_title_center">تعديل بيانات  عميل </h3>
+                    <h3 class="card-title card_title_center">تعديل بيانات  المورد </h3>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
 
-                     <form action= {{ route('admin.customer.update',$data['id']) }} method="POST" >
+                     <form action= {{ route('admin.supplier.update',$data['id']) }} method="POST" >
                       @csrf
                       <div class="row">
 
@@ -24,13 +24,29 @@
 
                         <div class="col-md-6">
                             <div class="form-group">
-                             <label for="name"> اسم  العميل</label>
+                             <label for="name"> اسم  المورد</label>
                              <input  name="name" id="name" class="form-control" value="{{old('name',$data['name'])}}"  >
                               @error('name')
                               <span class="text-danger" >{{ $message }}</span>
                               @enderror
                           </div>
                           </div>
+                          <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="supplier_categories_id"> فئة المورد</label>
+                               <select name="supplier_categories_id" id="supplier_categories_id" class="form-control" >
+                                <option value="">اختر الفئة</option>
+                                @if(@isset($supplier_categories) && !@empty($supplier_categories) )
+                                @foreach ($supplier_categories as $info )
+                                <option {{old('supplier_categories_id',$data['supplier_categories_id'])==$info->id ? 'selected' : ''  }}   value="{{$info->id}}">{{$info->name}}</option>
+                                @endforeach
+                                @endif
+                               </select>
+                                 @error('supplier_categories_id')
+                                 <span class="text-danger" >{{ $message }}</span>
+                                 @enderror
+                             </div>
+                             </div>
                           {{-- <div class="col-md-6">
                             <div class="form-group">
                              <label for="customer_code  "> كود  العميل</label>
@@ -58,7 +74,7 @@
                            </div>
                            </div> --}}
 
-                               
+
                                 <div class="col-md-6">
                                   <div class="form-group">
                                    <label for="address">   العنوان</label>
@@ -97,7 +113,7 @@
                     <div class="col-md-12">
                      <div class="form-group text-center">
                         <button id="do_add_item_dd" type="submit" class="btn btn-sm btn-primary"> تعديل</button>
-                        <a href="{{ route('admin.accounts.index') }}" class="btn btn-sm btn-danger" >الغاء</a>
+                        <a href="{{ route('admin.supplier.index') }}" class="btn btn-sm btn-danger" >الغاء</a>
                       </div>
                       </div>
 

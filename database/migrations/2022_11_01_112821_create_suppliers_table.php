@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('suppliers', function (Blueprint $table) {
             $table->id();
             $table->string('name',225);
-            $table->foreignId('account_number')->constrained('accounts');
+            $table->bigInteger('account_number')->constrained('accounts');
             $table->bigInteger('supplier_code');// رقم الحساب المالي على مستوى الشركة
             $table->foreignId('supplier_categories_id')->constrained('supplier_categories');
             $table->decimal('start_balance');// رصيد ابتدائي// دائن او مدين او متزن او المدة

@@ -5,6 +5,7 @@
 
         <th>اسم</th>
         <th>الكود</th>
+        <th>فئة المورد</th>
         <th>رقم الحساب</th>
         <th> الرصيد</th>
         <th> حالة التفعيل</th>
@@ -17,14 +18,15 @@
         @foreach ($data as $info)
             <tr>
                 <td>{{ $info->name }}</td>
-                <td>{{ $info->customer_code}}</td>
+                <td>{{ $info->supplier_code}}</td>
+                <td>{{ $info->supplier_categories_name}}</td>
                 <td>{{$info->account_number}}</td>
                 <td></td>
                 <td> @if ($info->active == 1)مفعلة  @else معطل @endif</td>
                 <td>
-                  <a href="{{route('admin.customer.edit',$info->id)}}" class="btn btn-sm btn-primary">تعديل</a>
-                    <a href="{{ route('admin.customer.delete',$info->id) }}" class="btn btn-sm btn-danger are_you_sure">حذف</a>
-                    <a href="{{ route('admin.customer.show',$info->id) }}" class="btn btn-sm btn-info ">عرض</a>
+                  <a href="{{route('admin.supplier.edit',$info->id)}}" class="btn btn-sm btn-primary">تعديل</a>
+                    <a href="{{ route('admin.supplier.delete',$info->id) }}" class="btn btn-sm btn-danger are_you_sure">حذف</a>
+                    <a href="{{ route('admin.supplier.show',$info->id) }}" class="btn btn-sm btn-info ">عرض</a>
                 </td>
 
 

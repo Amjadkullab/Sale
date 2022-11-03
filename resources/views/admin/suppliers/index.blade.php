@@ -24,7 +24,7 @@
                     <div class="row">
                         <div class="col-md-4">
 
-                            <input  type="radio" checked  name="searchbyradio" id="searchbyradio" value="customer_code">بحث بكود المورد
+                            <input  type="radio" checked  name="searchbyradio" id="searchbyradio" value="supplier_code">بحث بكود المورد
                             <input  type="radio"  name="searchbyradio" id="searchbyradio" value="account_number">بحث برقم الحساب
                             <input  type="radio" name="searchbyradio" id="searchbyradio" value="name">بالاسم
                             <input autofocus style="margin-top: 8px !important;" type="text" id="searchbytext" class="form-control" placeholder=" -كود العميل اسم- رقم الحساب"> <br>
@@ -42,6 +42,7 @@
 
                                     <th>اسم</th>
                                     <th>الكود</th>
+                                    <th>فئة المورد</th>
                                     <th>رقم الحساب</th>
                                     <th> الرصيد</th>
                                     <th> حالة التفعيل</th>
@@ -55,6 +56,7 @@
                                         <tr>
                                             <td>{{ $info->name }}</td>
                                             <td>{{ $info->supplier_code}}</td>
+                                            <td>{{ $info->supplier_categories_name}}</td>
                                             <td>{{$info->account_number}}</td>
                                             <td></td>
                                             <td> @if ($info->active == 1)مفعلة  @else معطل @endif</td>
@@ -116,6 +118,6 @@
     </div>
 @endsection
 @section('script')
-<script src="{{asset('admin_assets/js/customers.js')}}"></script>
+<script src="{{asset('admin_assets/js/suppliers.js')}}"></script>
 
 @endsection
