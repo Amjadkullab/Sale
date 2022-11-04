@@ -17,6 +17,7 @@ class Suppliers_with_ordersController extends Controller
         if (!empty($data)) {
             foreach ($data as $info)
                 $info->added_by_admin = Admin::where('id', $info->added_by)->value('name');
+                $info->supplier_name = Supplier::where(['supplier_code'=>$info->supplier_code])->value('name');
             if ($info->updated_by > 0 and $info->updated_by != null) {
                 $info->updated_by_admin = Admin::where('id', $info->updated_by)->value('name');
             }
