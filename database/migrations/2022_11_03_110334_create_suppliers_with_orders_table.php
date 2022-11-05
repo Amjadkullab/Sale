@@ -35,7 +35,7 @@ return new class extends Migration
             $table->tinyInteger('pill_type');//نوع الفاتورة اجل او كاش
             $table->decimal('what_paid')->nullable()->default(0);
             $table->decimal('what_remain')->nullable()->default(0);
-            $table->foreignId('trasuries_transaction_id')->constrained('trasuries_transaction')->nullable();
+            // $table->foreignId('trasuries_transaction_id')->constrained('trasuries_transaction')->nullable();
             $table->decimal('supplier_balance_before');//حالة رصيد المورد قبل الفاتورة
             $table->decimal('supplier_balance_after');//حالة رصيد المورد بعد الفاتورة
             $table->integer('added_by');

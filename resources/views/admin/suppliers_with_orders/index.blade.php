@@ -43,46 +43,31 @@
 
                     <div id="ajax_responce_searchDiv">
                         @if (@isset($data) && !@empty($data))
-                            @php
-                                $i = 1;
-                            @endphp
+
                             <table id="example2" class="table table-bordered table-hover">
                                 <thead class="custom_thead">
                                     <th>كود</th>
                                     <th> المورد</th>
                                     <th>تاريخ الفاتورة</th>
-                                    <th>نوع الفاتوة </th>
+                                    <th>نوع الفاتورة </th>
                                     <th>حالة الفاتورة</th>
-                                    {{-- <th>تاريخ التحديث</th> --}}
-                                    <th></th>
-                                    {{-- <th>تاريخ الاضافة</th>
-                                    <th>تاريخ التحديث</th> --}}
+                                     <th></th>
                                 </thead>
                                 <tbody>
                                     @foreach ($data as $info)
                                         <tr>
-
                                             <td>{{ $info->auto_serial }}</td>
                                             <td>{{ $info->supplier_name }}</td>
                                             <td>{{ $info->order_date }}</td>
                                             <td>
                                                 @if ($info->pill_type == 1)
                                                       كاش
-                                                @elseif ($info->pill_type == 2)  اجل@else
+                                                @elseif ($info->pill_type ==2)  اجل@else
                                                     غير محدد
                                                 @endif
                                             </td>
                                             <td>
-                                                @if ($info->is_approved == 1)
-                                                    معتمدة
-                                                @else
-                                                    مفتوحة
-                                                @endif
-                                            </td>
-
-
-
-
+                                                @if ($info->is_approved == 1)  معتمدة @else  مفتوحة@endif </td>
                                             <td>
                                                 <a href="{{ route('admin.supplier_order.edit', $info->id) }}"
                                                     class="btn btn-sm btn-primary">تعديل</a>
@@ -130,9 +115,7 @@
 
                                             </td> --}}
                                         </tr>
-                                        @php
-                                            $i++;
-                                        @endphp
+                                    
                                     @endforeach
                                 </tbody>
                             </table>
