@@ -74,7 +74,7 @@ class Suppliers_with_ordersController extends Controller
 
 
     }
-    public function details($id){
+    public function show($id){
 
         try{
             $com_code = auth()->user()->com_code;
@@ -84,11 +84,12 @@ class Suppliers_with_ordersController extends Controller
         }
 
       $data['added_by_admin'] = Admin::where('id', $data['added_by'])->value('name');
+     $data['supplier_name']=Supplier::where('supplier_code',$data['supplier_code'])->value('name');
 
       if ($data['updated_by'] > 0 and $data['updated_by']!= null) {
           $data['updated_by_admin'] = Admin::where('id',  $data['updated_by'] )->value('name');
       }
-        $details = suppliers_with_orders_detail::select()->where(['suppliers_with_orders_auto_serial'=>$data['suppliers_with_orders_auto_serial']])->Orderby('id','DESC')->get(); // treasuries_id هي الخزنة الاب
+        $details = suppliers_with_orders_detail::select()->where(['suppliers_with_orders_auto_serial'=>$data['auto_serial'],'order_type'=>1,'com_code'=>$com_code])->Orderby('id','DESC')->get(); // treasuries_id هي الخزنة الاب
         if(!empty($details)){
             foreach($details as $info){
                 $info->item_card_name = Inv_itemcard::where('item_code',$info->item_code)->value('name');
@@ -101,7 +102,7 @@ class Suppliers_with_ordersController extends Controller
         }
 
 
-    return view('admin.supplier_order.details',['data'=>$data , 'details'=> $details]);
+    return view('admin.suppliers_with_orders.show',['data'=>$data , 'details'=> $details]);
 
         }catch(\Exception $ex){
         return redirect()->back()->with(['error' => 'عفوا حدث خطا ما!' . $ex->getMessage()]);
