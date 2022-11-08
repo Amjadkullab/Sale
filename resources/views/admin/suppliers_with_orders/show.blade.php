@@ -1,6 +1,12 @@
 @extends('layouts.master')
 @section('title', ' المشتريات')
 @section('contentheader', 'حركات مخزنية')
+@section('css')
+
+<link rel="stylesheet" href="{{asset('admin_assets/plugins/select2/css/select2.min.css')}}">
+<link rel="stylesheet" href="{{asset('admin_assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}">
+
+@endsection
 @section('contentheaderlink')
     <a href="{{ route('admin.supplier_order.index') }}">
         فواتير المشتريات</a>
@@ -206,17 +212,48 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content bg-info">
                 <div class="modal-header">
-                    <h4 class="modal-title">Info Modal</h4>
+                    <h4 class="modal-title">اضافة أصناف للفاتورة </h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <div class="modal-body" id="Add_item_modal" style="background-color: white !important">
-                    <p>One fine body…</p>
+                <div class="modal-body" id="Add_item_modal" style="background-color: white !important;color: black;">
+                           <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                 <label for="">بيانات الاصناف</label>
+                                 <select name="item_code_add" id="item_code_add" class="form-control select2" style="width: 100%;">
+                                  <option value="">  اختر الصنف </option>
+                                  @if (@isset($item_cards)&& !@empty($item_cards))
+                                  @foreach ( $item_cards as $info )
+                                  <option data-type= "{{ $info->item_type }}" value="{{ $info->item_code }}"> {{ $info->name }}</option>
+
+                                  @endforeach
+                                  @endif
+                                 </select>
+
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                 <label for="">  وحدات الصنف</label>
+                                 <select name="item_code_add" id="item_code_add" class="form-control">
+                                  <option value="">   اختر الوحدة المستلم بها</option>
+                                  @if (@isset($item_cards)&& !@empty($item_cards))
+                                  @foreach ( $item_cards as $info )
+                                  <option data-type= "{{ $info->item_type }}" value="{{ $info->item_code }}"> {{ $info->name }}</option>
+
+                                  @endforeach
+                                  @endif
+                                 </select>
+
+                                </div>
+                            </div>
+                           </div>
                 </div>
                 <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-outline-light">Save changes</button>
+                    <button type="button" class="btn btn-outline-light" data-dismiss="modal">اغلاق</button>
+                    <button type="button" class="btn btn-outline-light">أضف للفاتورة </button>
                 </div>
             </div>
             <!-- /.modal-content -->
@@ -224,16 +261,20 @@
         <!-- /.modal-dialog -->
     </div>
 
+@endsection
+@section('script')
+<script src=" {{ asset('admin_assets/plugins/select2/js/select2.full.min.js')}}"></script>
+<script>
+$(function () {
+    //Initialize Select2 Elements
+    $('.select2').select2()
 
-
-
-
-
-
-
-
-
-
+    //Initialize Select2 Elements
+    $('.select2bs4').select2({
+      theme: 'bootstrap4'
+    });
+    });
+    </script>
 
 
 @endsection

@@ -100,9 +100,17 @@ class Suppliers_with_ordersController extends Controller
             }
 
         }
+        // if pill still open
+        if($data['is_approved']==0){
+            $item_cards = Inv_itemcard::select('name','item_code','item_type')->where(['active'=>1,'com_code'=>$com_code])->orderby('id','DESC')->get();
+
+        }else{
+            $item_cards = array();
+
+        }
 
 
-    return view('admin.suppliers_with_orders.show',['data'=>$data , 'details'=> $details]);
+    return view('admin.suppliers_with_orders.show',['data'=>$data , 'details'=> $details,'item_cards'=>$item_cards]);
 
         }catch(\Exception $ex){
         return redirect()->back()->with(['error' => 'عفوا حدث خطا ما!' . $ex->getMessage()]);
