@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Suppliers_with_ordersRequest;
 use App\Models\Admin;
 use App\Models\Inv_itemcard;
+use App\Models\Inv_uom;
 use App\Models\Supplier;
 use App\Models\suppliers_with_orders_detail;
 use Illuminate\Http\Request;
@@ -118,4 +119,23 @@ class Suppliers_with_ordersController extends Controller
     }
 
     }
+    public function get_item_uoms (Request $request){
+        if($request->ajax()){
+             $item_code = $request->item_code;
+           $com_code = auth()->user()->com_code ;
+           $item_card_data = Inv_itemcard::select('does_has_retailunit','retail_uom_id ','uom_id')->where(['item_code'=>$item_code , 'com_code'=>$com_code])->get();
+         if(!empty($item_card_data)){
+            if($item_card_data['does_has_retailunit']==1){
+                $item_card_data['parent_uom_name'] = Inv_uom::where(['id'=>$item_card_data['uom_id']])->value('name');
+                $item_card_data['retail_uom_name'] = Inv_uom::where(['id'=>$item_card_data['retail_uom_id']])->value('name');
+            }
+
+         else{
+            $item_card_data['parent_uom_name'] = Inv_uom::where(['id'=>$item_card_data['uom_id']])->value('name');
+
+         }
+        }
+            return view('admin.suppliers_with_orders.get_item_uoms',['item_card_data'=>$item_card_data]);
+    }
+}
 }
