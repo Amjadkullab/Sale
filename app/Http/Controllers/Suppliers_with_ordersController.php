@@ -79,7 +79,7 @@ class Suppliers_with_ordersController extends Controller
 
         try{
             $com_code = auth()->user()->com_code;
-            $data = SuppliersWith_order::select()->where(['id'=>$id,'com_code'=>$com_code])->first();
+            $data = SuppliersWith_order::select()->where(['id'=>$id,'com_code'=>$com_code,'order_type'=>1])->first();
             if(empty($data)){
                 return redirect()->route('admin.supplier_order.index')->with(['error' => 'عفوا غير قادر على الوصول الى البياات المطلوبة !!']);
         }
@@ -143,7 +143,7 @@ class Suppliers_with_ordersController extends Controller
         if($request->ajax()){
              $item_code = $request->item_code;
            $com_code = auth()->user()->com_code ;
-           $suuplier_with_order =SuppliersWith_order::select('is_approved','order_date')->where(['auto_serial'=>$request->autoserailparent , 'com_code'=>$com_code,'order_type'=>1])->first();
+           $suuplier_with_order =SuppliersWith_order::select('is_approved','order_date','tax_value','discount_value')->where(['auto_serial'=>$request->autoserailparent , 'com_code'=>$com_code,'order_type'=>1])->first();
          if(!empty($suuplier_with_order)){
             if($suuplier_with_order['is_approved']==0){
                 $data_insert['suuplier_with_order']=$request->suuplier_with_order ;
@@ -166,19 +166,64 @@ class Suppliers_with_ordersController extends Controller
                 $data_insert['com_code'] = $com_code;
               $flag =  suppliers_with_orders_detail::create($data_insert);
               if($flag){
-                echo json_encode("done");
+
+              $total_details_sum =  suppliers_with_orders_detail::where(['suppliers_with_orders_auto_serial	'=>$request->autoserailparent , 'com_code'=>$com_code,'order_type'=>1])->sum('total_price');
+              $dataUpdateParent['total_cost_items'] =$total_details_sum ;
+              $dataUpdateParent['total_before_discount'] =$total_details_sum+$suuplier_with_order['tax_value'];
+              $dataUpdateParent['total_cost'] =$dataUpdateParent['total_before_discount']-$suuplier_with_order['discount_value'] ;
+              $dataUpdateParent['updated_by'] = auth()->user()->id;
+              $dataUpdateParent['updated_at'] = date('Y-m-d H:i:s');
+              SuppliersWith_order::where(['auto_serial'=>$request->autoserailparent , 'com_code'=>$com_code,'order_type'=>1])->update($dataUpdateParent);
+              echo json_encode("done");
               }
-
-
-
-
-
             }
-
-
+        }
+    }
+}
+public function reload_itemsdetails (Request $request){
+    if($request->ajax()){
+         $auto_serial = $request->autoserailparent;
+       $com_code = auth()->user()->com_code ;
+       $data = SuppliersWith_order::select('is_approved')->where(['auto_serial'=>$auto_serial,'com_code'=>$com_code,'order_type'=>1])->first();
+       if(!empty($data)){
+        $details = suppliers_with_orders_detail::select()->where(['suppliers_with_orders_auto_serial'=>$auto_serial,'order_type'=>1,'com_code'=>$com_code])->Orderby('id','DESC')->get(); // treasuries_id هي الخزنة الاب
+        if(!empty($details)){
+            foreach($details as $info){
+                $info->item_card_name = Inv_itemcard::where('item_code',$info->item_code)->value('name');
+                $info->uom_name = Inv_uom::select('id',$info->uom_id)->value('name');
+                $info->added_by_admin = Admin::where(['id',$info->added_by])->value('name');
+                if ($data['updated_by'] > 0 and $data['updated_by']!= null) {
+                    $data['updated_by_admin'] = Admin::where('id',  $data['updated_by'] )->value('name');
+                }
+            }
 
         }
 
-    }
+       }
+
+
+        return view('admin.suppliers_with_orders.reload_itemsdetails',['data'=>$data,'datails'=>$details]);
+}
+}
+public function reload_parent_pill (Request $request){
+    if($request->ajax()){
+
+       $com_code = auth()->user()->com_code ;
+
+       $data = SuppliersWith_order::select()->where(['auto_serial'=>$request->autoserailparent,'com_code'=>$com_code,'order_type'=>1])->first();
+       if(!empty($data)){
+        $data['added_by_admin'] = Admin::where('id', $data['added_by'])->value('name');
+        $data['supplier_name']=Supplier::where('supplier_code',$data['supplier_code'])->value('name');
+
+         if ($data['updated_by'] > 0 and $data['updated_by']!= null) {
+             $data['updated_by_admin'] = Admin::where('id',  $data['updated_by'] )->value('name');
+         }
+
+         return view('admin.suppliers_with_orders.reload_parent_pill',['data'=>$data]);
+        }
+   }
+
+
+
 }
 }

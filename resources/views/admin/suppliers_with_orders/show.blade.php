@@ -196,13 +196,13 @@
         <input type="hidden" id="ajax_get_item_uoms_url" value="{{ route('admin.supplier_order.get_item_uoms') }}">
        <input type="hidden" id="ajax_add_new_details" value="{{ route('admin.supplier_order.add_new_details') }}">
        <input type="hidden" id="autoserailparent" value="{{ $data['auto_serial'] }}">
-        {{-- <input type="hidden" id="ajax_reload_itemsdetials" value="{{ route('admin.suppliers_orders.reload_itemsdetials') }}">
-        <input type="hidden" id="ajax_reload_parent_pill" value="{{ route('admin.suppliers_orders.reload_parent_pill') }}">
-        <input type="hidden" id="ajax_load_edit_item_details" value="{{ route('admin.suppliers_orders.load_edit_item_details') }}">
+         <input type="hidden" id="ajax_reload_itemsdetials" value="{{ route('admin.supplier_order.reload_itemsdetails') }}">
+        <input type="hidden" id="ajax_reload_parent_pill" value="{{ route('admin.supplier_order.reload_parent_pill') }}">
+        {{-- <input type="hidden" id="ajax_load_edit_item_details" value="{{ route('admin.suppliers_orders.load_edit_item_details') }}">
         <input type="hidden" id="ajax_load_modal_add_details" value="{{ route('admin.suppliers_orders.load_modal_add_details') }}">
         <input type="hidden" id="ajax_edit_item_details" value="{{ route('admin.suppliers_orders.edit_item_details') }}">
         <input type="hidden" id="ajax_load_modal_approve_invoice" value="{{ route('admin.suppliers_orders.load_modal_approve_invoice') }}">
-        <input type="hidden" id="ajax_load_usershiftDiv" value="{{ route('admin.suppliers_orders.load_usershiftDiv') }}"> --}}
+        <input type="hidden" id="ajax_load_usershiftDiv" value="{{ route('admin.suppliers_orders.load_usershiftDiv') }}">  --}}
 
 
 
@@ -390,6 +390,7 @@
 @endsection
 
 @section("script")
+<script  src="{{asset('admin_assets/js/suppliersorders.js')}}"> </script>
 
 <script  src="{{ asset('admin_assets/plugins/select2/js/select2.full.min.js') }}"> </script>
 <script>
@@ -399,7 +400,7 @@
     });
     </script>
 
-<script  src="{{ asset('admin_assets/js/suppliersorders.js') }}"> </script>
+
 
 
 @endsection
