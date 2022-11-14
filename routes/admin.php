@@ -154,6 +154,7 @@ Route::get('/supplier_order/delete/{id}',[Suppliers_with_ordersController::class
 Route::post('/supplier_order/ajax_search',[Suppliers_with_ordersController::class,'ajax_search'])->name('admin.supplier_order.ajax_search');
 Route::get('/supplier_order/show/{id}',[Suppliers_with_ordersController::class,'show'])->name('admin.supplier_order.show');
 Route::post('/supplier_order/get_item_uoms',[Suppliers_with_ordersController::class,'get_item_uoms'])->name('admin.supplier_order.get_item_uoms');
+Route::post('/supplier_order/add_new_details',[Suppliers_with_ordersController::class,'add_new_details'])->name('admin.supplier_order.add_new_details');
 //end supplier order
 
 

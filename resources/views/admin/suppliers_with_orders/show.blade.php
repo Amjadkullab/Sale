@@ -194,8 +194,9 @@
         </h3>
         <input type="hidden" id="token_search" value="{{csrf_token() }}">
         <input type="hidden" id="ajax_get_item_uoms_url" value="{{ route('admin.supplier_order.get_item_uoms') }}">
-        {{-- <input type="hidden" id="ajax_add_new_details" value="{{ route('admin.suppliers_orders.add_new_details') }}">
-        <input type="hidden" id="ajax_reload_itemsdetials" value="{{ route('admin.suppliers_orders.reload_itemsdetials') }}">
+       <input type="hidden" id="ajax_add_new_details" value="{{ route('admin.supplier_order.add_new_details') }}">
+       <input type="hidden" id="autoserailparent" value="{{ $data['auto_serial'] }}">
+        {{-- <input type="hidden" id="ajax_reload_itemsdetials" value="{{ route('admin.suppliers_orders.reload_itemsdetials') }}">
         <input type="hidden" id="ajax_reload_parent_pill" value="{{ route('admin.suppliers_orders.reload_parent_pill') }}">
         <input type="hidden" id="ajax_load_edit_item_details" value="{{ route('admin.suppliers_orders.load_edit_item_details') }}">
         <input type="hidden" id="ajax_load_modal_add_details" value="{{ route('admin.suppliers_orders.load_modal_add_details') }}">
@@ -204,7 +205,7 @@
         <input type="hidden" id="ajax_load_usershiftDiv" value="{{ route('admin.suppliers_orders.load_usershiftDiv') }}"> --}}
 
 
-        <input type="hidden" id="autoserailparent" value="{{ $data['auto_serial'] }}">
+
 
 
 
@@ -237,11 +238,7 @@
         <br>
         تاريخ انتاج  {{ $info->production_date }} <br>
 
-        تاريخ انتهاء  {{ $info->expire_date }} <br>
-
-        @endif
-
-
+        تاريخ انتهاء  {{ $info->expire_date }} <br> @endif
         </td>
          <td>{{ $info->uom_name }}</td>
          <td>{{ $info->deliverd_quantity*(1) }}</td>
@@ -332,7 +329,7 @@
            <div class="col-md-4 relatied_to_itemCard" id="UomDivAdd" style="display: none;">
         </div>
 
-        <div class="col-md-4  relatied_to_itemCard" style="display: none;">
+        <div class="col-md-4  relatied_to_itemCard" id="UomDivAdd" style="display: none;">
             <div class="form-group">
                 <label for="">   الكمية المستلمة    </label>
                 <input oninput="this.value=this.value.replace(/[^0-9]/g ,'');" value=""  id="quantity_add" class="form-control"  placeholder="أدخل اخر رقم صرف نقدية لهده الخزنة" oninvalid="setCustomValidity('من فضلك أدخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}">
@@ -348,14 +345,14 @@
              </div>
         <div class="col-md-4  relatied_to_date" style="display: none;">
             <div class="form-group">
-                <label for="">     تاريخ الانتاج    </label>
+                <label for="production_date">     تاريخ الانتاج    </label>
                 <input  type="date" value=""  id="production_date" class="form-control"  placeholder="أدخل اخر رقم صرف نقدية لهده الخزنة" oninvalid="setCustomValidity('من فضلك أدخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}">
 
              </div>
              </div>
         <div class="col-md-4  relatied_to_date" style="display: none;">
             <div class="form-group">
-                <label for="">     تاريخ الانتهاء    </label>
+                <label for="expire_date">     تاريخ انتهاء الصلاحية    </label>
                 <input type="date" value=""  id="expire_date" class="form-control"  placeholder="أدخل اخر رقم صرف نقدية لهده الخزنة" oninvalid="setCustomValidity('من فضلك أدخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}">
 
              </div>
@@ -368,10 +365,18 @@
              </div>
              </div>
 
-      </div>
+            <div class="col-md-12">
+                <div class="form-group text-center">
+                <button type="button" class="btn btn-sm btn-danger" id="AddToBill" data-dismiss="modal">اضف للفاتورة</button>
+            </div>
+            </div>
+
+
+        </div>
+
       <div class="modal-footer justify-content-between">
         <button type="button" class="btn btn-outline-light" data-dismiss="modal">اغلاق</button>
-        <button type="button" class="btn btn-outline-light" data-dismiss="modal">اضف للفاتورة</button>
+
       </div>
     </div>
     <!-- /.modal-content -->

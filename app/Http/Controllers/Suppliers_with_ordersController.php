@@ -94,6 +94,7 @@ class Suppliers_with_ordersController extends Controller
         if(!empty($details)){
             foreach($details as $info){
                 $info->item_card_name = Inv_itemcard::where('item_code',$info->item_code)->value('name');
+                $info->uom_name = Inv_uom::select('id',$info->uom_id)->value('name');
                 $info->added_by_admin = Admin::where(['id',$info->added_by])->value('name');
                 if ($data['updated_by'] > 0 and $data['updated_by']!= null) {
                     $data['updated_by_admin'] = Admin::where('id',  $data['updated_by'] )->value('name');
@@ -123,7 +124,7 @@ class Suppliers_with_ordersController extends Controller
         if($request->ajax()){
              $item_code = $request->item_code;
            $com_code = auth()->user()->com_code ;
-           $item_card_data = Inv_itemcard::select('does_has_retailunit','retail_uom_id ','uom_id')->where(['item_code'=>$item_code , 'com_code'=>$com_code])->get();
+           $item_card_data = Inv_itemcard::select('does_has_retailunit','retail_uom_id ','uom_id')->where(['item_code'=>$item_code , 'com_code'=>$com_code])->first();
          if(!empty($item_card_data)){
             if($item_card_data['does_has_retailunit']==1){
                 $item_card_data['parent_uom_name'] = Inv_uom::where(['id'=>$item_card_data['uom_id']])->value('name');
@@ -136,6 +137,48 @@ class Suppliers_with_ordersController extends Controller
          }
         }
             return view('admin.suppliers_with_orders.get_item_uoms',['item_card_data'=>$item_card_data]);
+    }
+}
+    public function add_new_details (Request $request){
+        if($request->ajax()){
+             $item_code = $request->item_code;
+           $com_code = auth()->user()->com_code ;
+           $suuplier_with_order =SuppliersWith_order::select('is_approved','order_date')->where(['auto_serial'=>$request->autoserailparent , 'com_code'=>$com_code,'order_type'=>1])->first();
+         if(!empty($suuplier_with_order)){
+            if($suuplier_with_order['is_approved']==0){
+                $data_insert['suuplier_with_order']=$request->suuplier_with_order ;
+                $data_insert['order_type']=1;
+                $data_insert['item_code']=$request->item_code_add ;
+                $data_insert['deliverd_quantity']=$request->quantity_add ;
+                $data_insert['unit_price']=$request->price_add ;
+                $data_insert['uom_id']=$request->uom_id_Add ;
+                $data_insert['isparentuom']=$request->isparentuom ;
+                if($request->type == 2){
+                    $data_insert['production_date']=$request->production_date ;
+                    $data_insert['expire_date']=$request->expire_date ;
+                }
+                $data_insert['item_card_type']=$request->type;
+                $data_insert['total_price']=$request->total_add;
+                $data_insert['order_date']=$suuplier_with_order['order_date'];
+
+                $data_insert['added_by'] = auth()->user()->id;
+                $data_insert['created_at'] = date('Y-m-d H:i:s');
+                $data_insert['com_code'] = $com_code;
+              $flag =  suppliers_with_orders_detail::create($data_insert);
+              if($flag){
+                echo json_encode("done");
+              }
+
+
+
+
+
+            }
+
+
+
+        }
+
     }
 }
 }
