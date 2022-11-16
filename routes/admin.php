@@ -156,8 +156,10 @@ Route::post('/supplier_order/ajax_search',[Suppliers_with_ordersController::clas
 Route::get('/supplier_order/show/{id}',[Suppliers_with_ordersController::class,'show'])->name('admin.supplier_order.show');
 Route::post('/supplier_order/get_item_uoms',[Suppliers_with_ordersController::class,'get_item_uoms'])->name('admin.supplier_order.get_item_uoms');
 Route::post('/supplier_order/add_new_details',[Suppliers_with_ordersController::class,'add_new_details'])->name('admin.supplier_order.add_new_details');
+Route::post('/supplier_order/load_modal_add_details',[Suppliers_with_ordersController::class,'load_modal_add_details'])->name('admin.supplier_order.load_modal_add_details');
 Route::post('/supplier_order/reload_itemsdetails',[Suppliers_with_ordersController::class,'reload_itemsdetails'])->name('admin.supplier_order.reload_itemsdetails');
 Route::post('/supplier_order/reload_parent_pill',[Suppliers_with_ordersController::class,'reload_parent_pill'])->name('admin.supplier_order.reload_parent_pill');
+Route::post('/supplier_order/load_edit_item_details',[Suppliers_with_ordersController::class,'load_edit_item_details'])->name('admin.supplier_order.load_edit_item_details');
 //end supplier order
 
 

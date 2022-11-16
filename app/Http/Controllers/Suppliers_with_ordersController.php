@@ -153,11 +153,11 @@ class Suppliers_with_ordersController extends Controller
            $suuplier_with_order =SuppliersWith_order::select('is_approved','order_date','tax_value','discount_value')->where(['auto_serial'=>$request->autoserailparent , 'com_code'=>$com_code,'order_type'=>1])->first();
          if(!empty($suuplier_with_order)){
             if($suuplier_with_order['is_approved']==0){
-                $data_insert['suuplier_with_order']=$request->suuplier_with_order ;
+                $data_insert['suuplier_with_order']=$request->suuplier_with_order;
                 $data_insert['order_type']=1;
-                $data_insert['item_code']=$request->item_code_add ;
+                $data_insert['item_code']=$request->item_code_add;
                 $data_insert['deliverd_quantity']=$request->quantity_add ;
-                $data_insert['unit_price']=$request->price_add ;
+                $data_insert['unit_price']=$request->price_add;
                 $data_insert['uom_id']=$request->uom_id_Add ;
                 $data_insert['isparentuom']=$request->isparentuom ;
                 if($request->type == 2){
@@ -275,6 +275,51 @@ return redirect()->route('admin.supplier_order.show',$id)->with(['success' => '�
     }catch(\Exception $ex){
         return redirect()->back()->with(['error'=>'عفوا حدث خطأ ما '.$ex->getMessage()]);
     }
+
+
+}
+public function load_edit_item_details(Request $request){
+
+    if($request->ajax()){
+
+        $com_code = auth()->user()->com_code ;
+
+        $parent_pill_data = SuppliersWith_order::select('is_approved')->where(['auto_serial'=>$request->autoserailparent,'com_code'=>$com_code,'order_type'=>1])->first();
+        if(!empty($parent_pill_data)){
+            if($parent_pill_data['is_approved']==0){
+
+                $item_data_details = suppliers_with_orders_detail::select()->where(['suppliers_with_orders_auto_serial'=>$request->autoserailparent,'com_code'=>$com_code,'order_type'=>1,'id'=>$request->id])->first();
+                $item_cards = Inv_itemcard::select('name','item_code','item_type')->where(['active'=>1,'com_code'=>$com_code])->orderby('id','DESC')->get();
+
+                $item_card_data = Inv_itemcard::select('does_has_retailunit','retail_uom_id','uom_id')->where(['item_code'=>$item_data_details['item_code'] , 'com_code'=>$com_code])->first();
+                if(!empty($item_card_data)){
+                   if($item_card_data['does_has_retailunit']==1){
+                       $item_card_data['parent_uom_name'] = Inv_uom::where(['id'=>$item_card_data['uom_id']])->value('name');
+                       $item_card_data['retail_uom_name'] = Inv_uom::where(['id'=>$item_card_data['retail_uom_id']])->value('name');
+                   }
+
+                else{
+                   $item_card_data['parent_uom_name'] = Inv_uom::where(['id'=>$item_card_data['uom_id']])->value('name');
+
+                }
+               }
+
+
+
+
+
+
+
+                return view('admin.suppliers_with_orders.load_edit_item_details',['parent_pill_data'=>$parent_pill_data,'item_data_details'=>$item_data_details,'item_cards'=>$item_cards,'item_card_data'=>$item_card_data]);
+
+            }
+
+
+         }
+    }
+
+
+
 
 
 }

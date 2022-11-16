@@ -61,11 +61,6 @@
               <td > {{ $data['store_name'] }}</td>
           </tr>
 
-
-            <tr>
-              <td class="width30">  اسم المورد </td>
-              <td > {{ $data['supplier_name'] }}</td>
-          </tr>
           <tr>
             <td class="width30">   اجمالي الفاتورة </td>
             <td > {{ $data['total_befor_discount']*(1) }}</td>
@@ -102,7 +97,7 @@
 
 
           <tr>
-            <td class="width30">    نسبة القيمة المضافة </td>
+            <td class="width30">    نسبة الضريبة المضافة </td>
             <td >
             @if($data['tax_percent']>0)
             لايوجد
@@ -187,7 +182,7 @@
         <h3 class="card-title card_title_center">
         الاصناف المضافة للفاتورة
         @if($data['is_approved']==0)
-        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#Add_item_Modal">
+        <button type="button" class="btn btn-info" id="load_modal_add_detailsBtn">
           اضافة صنف للفاتورة
         </button>
        @endif
@@ -198,11 +193,11 @@
        <input type="hidden" id="autoserailparent" value="{{ $data['auto_serial'] }}">
          <input type="hidden" id="ajax_reload_itemsdetials" value="{{route('admin.supplier_order.reload_itemsdetails')}}">
         <input type="hidden" id="ajax_reload_parent_pill" value="{{route('admin.supplier_order.reload_parent_pill')}}">
-        {{-- <input type="hidden" id="ajax_load_edit_item_details" value="{{ route('admin.suppliers_orders.load_edit_item_details') }}">
-        <input type="hidden" id="ajax_load_modal_add_details" value="{{ route('admin.suppliers_orders.load_modal_add_details') }}">
-        <input type="hidden" id="ajax_edit_item_details" value="{{ route('admin.suppliers_orders.edit_item_details') }}">
+        <input type="hidden" id="ajax_load_edit_item_details" value="{{route('admin.supplier_order.load_edit_item_details')}}">
+        <input type="hidden" id="ajax_load_modal_add_details" value="{{route('admin.supplier_order.load_modal_add_details')}}">
+        {{-- <input type="hidden" id="ajax_edit_item_details" value="{{ route('admin.suppliers_orders.edit_item_details') }}">
         <input type="hidden" id="ajax_load_modal_approve_invoice" value="{{ route('admin.suppliers_orders.load_modal_approve_invoice') }}">
-        <input type="hidden" id="ajax_load_usershiftDiv" value="{{ route('admin.suppliers_orders.load_usershiftDiv') }}">  --}}
+        <input type="hidden" id="ajax_load_usershiftDiv" value="{{ route('admin.suppliers_orders.load_usershiftDiv') }}"> --}}
 
 
 
@@ -248,7 +243,7 @@
          <td>
        @if($data['is_approved']==0)
 
-       <button data-id="{{ $info->id }}" class="btn btn-sm load_edit_item_details  btn-primary">تعديل</button>
+      <button data-id="{{ $info->id }}"  class="btn btn-sm load_edit_item_details  btn-primary">تعديل</button>
        <a href="{{ route('admin.supplier_order.delete_details',["id"=>$info->id,"id_parent"=>$data['id']]) }}" class="btn btn-sm are_you_shue   btn-danger">حذف</a>
 
 
@@ -309,66 +304,6 @@
           <span aria-hidden="true">&times;</span></button>
       </div>
       <div class="modal-body" id="Add_item_Modal_body" style="background-color: white !important; color:black;">
-           <div class="col-md-4">
-        <div class="form-group">
-            <label>   بيانات الأصناف</label>
-            <select  id="item_code_add" class="form-control select2" style="width: 100%;">
-              <option value="">اختر الصنف</option>
-              @if (@isset($item_cards) && !@empty($item_cards))
-             @foreach ($item_cards as $info )
-               <option data-type="{{ $info->item_type }}" value="{{ $info->item_code }}"> {{ $info->name }} </option>
-             @endforeach
-              @endif
-            </select>
-
-            </div>
-        </div>
-
-           <div class="col-md-4 relatied_to_itemCard" id="UomDivAdd" style="display: none;">
-        </div>
-
-        <div class="col-md-4  relatied_to_itemCard" id="UomDivAdd" style="display: none;">
-            <div class="form-group">
-                <label for="">   الكمية المستلمة    </label>
-                <input oninput="this.value=this.value.replace(/[^0-9]/g ,'');" value=""  id="quantity_add" class="form-control"  placeholder="أدخل اخر رقم صرف نقدية لهده الخزنة" oninvalid="setCustomValidity('من فضلك أدخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}">
-
-             </div>
-             </div>
-        <div class="col-md-4  relatied_to_itemCard" style="display: none;">
-            <div class="form-group">
-                <label for="">    سعر الوحدة    </label>
-                <input oninput="this.value=this.value.replace(/[^0-9]/g ,'');" value=""  id="price_add" class="form-control"  placeholder="أدخل اخر رقم صرف نقدية لهده الخزنة" oninvalid="setCustomValidity('من فضلك أدخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}">
-
-             </div>
-             </div>
-        <div class="col-md-4  relatied_to_date" style="display: none;">
-            <div class="form-group">
-                <label for="production_date">     تاريخ الانتاج    </label>
-                <input  type="date" value=""  id="production_date" class="form-control"  placeholder="أدخل اخر رقم صرف نقدية لهده الخزنة" oninvalid="setCustomValidity('من فضلك أدخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}">
-
-             </div>
-             </div>
-        <div class="col-md-4  relatied_to_date" style="display: none;">
-            <div class="form-group">
-                <label for="expire_date">     تاريخ انتهاء الصلاحية    </label>
-                <input type="date" value=""  id="expire_date" class="form-control"  placeholder="أدخل اخر رقم صرف نقدية لهده الخزنة" oninvalid="setCustomValidity('من فضلك أدخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}">
-
-             </div>
-             </div>
-        <div class="col-md-4  relatied_to_itemCard" style="display: none;">
-            <div class="form-group">
-                <label for="">     الاجمالي    </label>
-                <input readonly  oninput="this.value=this.value.replace(/[^0-9]/g ,'');" value=""  id="total_add" class="form-control"  placeholder="أدخل اخر رقم صرف نقدية لهده الخزنة" oninvalid="setCustomValidity('من فضلك أدخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}">
-
-             </div>
-             </div>
-
-            <div class="col-md-12">
-                <div class="form-group text-center">
-                <button type="button" class="btn btn-sm btn-danger" id="AddToBill" data-dismiss="modal">اضف للفاتورة</button>
-            </div>
-            </div>
-
 
         </div>
 
@@ -382,7 +317,27 @@
   <!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
+<div class="modal fade" id="edit_item_Modal">
+    <div class="modal-dialog modal-xl" >
+      <div class="modal-content bg-info">
+        <div class="modal-header">
+          <h4 class="modal-title text-center ">  تحديث صنف بالفاتورة</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body" id="edit_item_Modal_body" style="background-color: white !important; color:black;">
 
+          </div>
+
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-outline-light" data-dismiss="modal">اغلاق</button>
+
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
 
 
 @endsection

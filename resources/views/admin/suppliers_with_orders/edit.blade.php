@@ -52,7 +52,7 @@
              @endforeach
               @endif
             </select>
-            @error('suuplier_code')
+            @error('supplier_code')
             <span class="text-danger">{{ $message }}</span>
             @enderror
             </div>
