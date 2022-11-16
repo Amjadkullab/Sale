@@ -26,15 +26,17 @@ class Suppliers_with_ordersRequest extends FormRequest
         return [
            'supplier_code'=>'required',
            'pill_type'=>'required',
-           'order_date'=>'required'
+           'order_date'=>'required',
+           'store_id'=>'required'
         ];
     }
     public function messages()
     {
         return [
            'supplier_code.required'=>'اسم المورد مطلوب',
-           'pill_type.required'=>'نوع المورد مطلوب',
-           'order_date.required'=>' تاريخ الفاتورة مطلوب'
+           'pill_type.required'=>'نوع الفاتورة مطلوب',
+           'order_date.required'=>'تاريخ الفاتورة مطلوب',
+           'store_id.required'=>'المخزن المستلم للفاتورة مطلوب',
         ];
     }
 }

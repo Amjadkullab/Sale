@@ -56,10 +56,10 @@
                 <td class="width30"> نوع الفاتورة</td>
                 <td > @if($data['pill_type']==1) كاش  @else اجل@endif</td>
             </tr>
-            {{-- <tr>
+            <tr>
               <td class="width30">   المخزن المستلم للفاتورة </td>
               <td > {{ $data['store_name'] }}</td>
-          </tr> --}}
+          </tr>
 
 
             <tr>
@@ -193,11 +193,11 @@
        @endif
         </h3>
         <input type="hidden" id="token_search" value="{{csrf_token() }}">
-        <input type="hidden" id="ajax_get_item_uoms_url" value="{{ route('admin.supplier_order.get_item_uoms') }}">
-       <input type="hidden" id="ajax_add_new_details" value="{{ route('admin.supplier_order.add_new_details') }}">
+        <input type="hidden" id="ajax_get_item_uoms_url" value="{{route('admin.supplier_order.get_item_uoms')}}">
+       <input type="hidden" id="ajax_add_new_details" value="{{route('admin.supplier_order.add_new_details')}}">
        <input type="hidden" id="autoserailparent" value="{{ $data['auto_serial'] }}">
-         <input type="hidden" id="ajax_reload_itemsdetials" value="{{ route('admin.supplier_order.reload_itemsdetails') }}">
-        <input type="hidden" id="ajax_reload_parent_pill" value="{{ route('admin.supplier_order.reload_parent_pill') }}">
+         <input type="hidden" id="ajax_reload_itemsdetials" value="{{route('admin.supplier_order.reload_itemsdetails')}}">
+        <input type="hidden" id="ajax_reload_parent_pill" value="{{route('admin.supplier_order.reload_parent_pill')}}">
         {{-- <input type="hidden" id="ajax_load_edit_item_details" value="{{ route('admin.suppliers_orders.load_edit_item_details') }}">
         <input type="hidden" id="ajax_load_modal_add_details" value="{{ route('admin.suppliers_orders.load_modal_add_details') }}">
         <input type="hidden" id="ajax_edit_item_details" value="{{ route('admin.suppliers_orders.edit_item_details') }}">
@@ -300,7 +300,7 @@
 </div>
 
 
-<div class="modal fade " id="Add_item_Modal">
+<div class="modal fade" id="Add_item_Modal">
   <div class="modal-dialog modal-xl" >
     <div class="modal-content bg-info">
       <div class="modal-header">
@@ -312,17 +312,15 @@
            <div class="col-md-4">
         <div class="form-group">
             <label>   بيانات الأصناف</label>
-            <select name="item_code_add" id="item_code_add" class="form-control select2" style="width: 100%;">
+            <select  id="item_code_add" class="form-control select2" style="width: 100%;">
               <option value="">اختر الصنف</option>
               @if (@isset($item_cards) && !@empty($item_cards))
              @foreach ($item_cards as $info )
-               <option data-type="{{ $info->item_type }}"  value="{{ $info->item_code }}"> {{ $info->name }} </option>
+               <option data-type="{{ $info->item_type }}" value="{{ $info->item_code }}"> {{ $info->name }} </option>
              @endforeach
               @endif
             </select>
-            @error('suuplier_code')
-            <span class="text-danger">{{ $message }}</span>
-            @enderror
+
             </div>
         </div>
 
@@ -390,7 +388,7 @@
 @endsection
 
 @section("script")
-<script  src="{{asset('admin_assets/js/suppliersorders.js')}}"> </script>
+<script  src="{{asset('admin_assets/js/suppliers_orders.js')}}"> </script>
 
 <script  src="{{ asset('admin_assets/plugins/select2/js/select2.full.min.js') }}"> </script>
 <script>

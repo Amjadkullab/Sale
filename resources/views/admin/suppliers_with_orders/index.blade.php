@@ -50,6 +50,7 @@
                                     <th> المورد</th>
                                     <th>تاريخ الفاتورة</th>
                                     <th>نوع الفاتورة </th>
+                                    <th>المخزن المستلم </th>
                                     <th>حالة الفاتورة</th>
                                      <th></th>
                                 </thead>
@@ -66,6 +67,7 @@
                                                     غير محدد
                                                 @endif
                                             </td>
+                                            <td>{{ $info->store_name }}</td>
                                             <td>
                                                 @if ($info->is_approved == 1)  معتمدة @else  مفتوحة@endif </td>
                                             <td>

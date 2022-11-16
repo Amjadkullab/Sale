@@ -14,6 +14,6 @@ class Inv_uom extends Model
 
 
           public function inv_itemcards(){
-            return $this->hasMany(Inv_itemcard::class);
+            return $this->hasOne(Inv_itemcard::class);
          }
 }

@@ -59,6 +59,7 @@ Route::get('/sales_material_type/create',[Sales_material_typesController::class,
 Route::post('/sales_material_type/store',[Sales_material_typesController::class,'store'])->name('admin.sales_material_type.store');
 Route::get('/sales_material_type/edit/{id}',[Sales_material_typesController::class,'edit'])->name('admin.sales_material_type.edit');
 Route::post('/sales_material_type/update/{id}',[Sales_material_typesController::class,'update'])->name('admin.sales_material_type.update');
+Route::post('/sales_material_type/ajax_search',[Sales_material_typesController::class,'ajax_search'])->name('admin.sales_material_type.ajax_search');
 Route::get('/sales_material_type/delete/{id}',[Sales_material_typesController::class,'delete'])->name('admin.sales_material_type.delete');
 //end sales_material_type
 //start stores

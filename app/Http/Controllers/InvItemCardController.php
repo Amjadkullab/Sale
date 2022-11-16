@@ -79,7 +79,7 @@ class InvItemCardController extends Controller
 
 
         $data_insert['name'] = $request->name ;
-        $data_insert['item_type'] = $request->item_type ;
+        $data_insert['item_type'] = $request->item_type;
         $data_insert['inv_itemcard_categories_id'] = $request->inv_itemcard_categories_id ;
         $data_insert['uom_id'] = $request->uom_id ;
         $data_insert['price'] = $request->price ;

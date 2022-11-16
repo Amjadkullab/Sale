@@ -6,10 +6,12 @@ use App\Http\Requests\Suppliers_with_ordersRequest;
 use App\Models\Admin;
 use App\Models\Inv_itemcard;
 use App\Models\Inv_uom;
+use App\Models\Store;
 use App\Models\Supplier;
 use App\Models\suppliers_with_orders_detail;
 use Illuminate\Http\Request;
 use App\Models\SuppliersWith_order;
+use Exception;
 
 class Suppliers_with_ordersController extends Controller
 {
@@ -21,6 +23,7 @@ class Suppliers_with_ordersController extends Controller
             foreach ($data as $info){
                 $info->added_by_admin=Admin::where('id', $info->added_by)->value('name');
                 $info->supplier_name=Supplier::where('supplier_code',$info->supplier_code)->value('name');
+                $info->store_name=Store::where('id',$info->store_id)->value('name');
             if ($info->updated_by > 0 and $info->updated_by != null) {
                 $info->updated_by_admin = Admin::where('id', $info->updated_by)->value('name');
             }
@@ -33,7 +36,8 @@ class Suppliers_with_ordersController extends Controller
     {
         $com_code = auth()->user()->com_code ;
         $suppliers = Supplier::select('name','supplier_code')->where(['com_code'=>$com_code,'active'=>1])->orderby('id','DESC')->paginate(PAGINATION_COUNT);
-        return view('admin.suppliers_with_orders.create',['suppliers'=>$suppliers]);
+        $stores = Store::select('id', 'name')->where(['com_code'=>$com_code , 'active'=>1])->orderby('id','DESC')->get();
+        return view('admin.suppliers_with_orders.create',['suppliers'=>$suppliers ,'stores'=>$stores]);
     }
     public function store(Suppliers_with_ordersRequest $request){
         try{
@@ -59,6 +63,7 @@ class Suppliers_with_ordersController extends Controller
                 $data_insert['DOC_NO'] = $request->DOC_NO;
                 $data_insert['supplier_code'] = $request->supplier_code;
                 $data_insert['pill_type'] = $request->pill_type;
+                $data_insert['store_id'] = $request->store_id;
                 $data_insert['account_number']=$supplierdata['account_number'];
                 $data_insert['added_by'] = auth()->user()->id;
                 $data_insert['created_at'] = date('Y-m-d H:i:s');
@@ -86,15 +91,16 @@ class Suppliers_with_ordersController extends Controller
 
       $data['added_by_admin'] = Admin::where('id', $data['added_by'])->value('name');
      $data['supplier_name']=Supplier::where('supplier_code',$data['supplier_code'])->value('name');
+     $data['store_name']=Store::where('id',$data['store_id'])->value('name');
 
       if ($data['updated_by'] > 0 and $data['updated_by']!= null) {
           $data['updated_by_admin'] = Admin::where('id',  $data['updated_by'] )->value('name');
       }
-        $details = suppliers_with_orders_detail::select()->where(['suppliers_with_orders_auto_serial'=>$data['auto_serial'],'order_type'=>1,'com_code'=>$com_code])->Orderby('id','DESC')->get(); // treasuries_id هي الخزنة الاب
+        $details = suppliers_with_orders_detail::select()->where(['suppliers_with_orders_auto_serial'=>$data['auto_serial'],'order_type'=>1,'com_code'=>$com_code])->orderby('id','DESC')->get(); // treasuries_id هي الخزنة الاب
         if(!empty($details)){
             foreach($details as $info){
                 $info->item_card_name = Inv_itemcard::where('item_code',$info->item_code)->value('name');
-                $info->uom_name = Inv_uom::select('id',$info->uom_id)->value('name');
+                $info->uom_name = Inv_uom::where('id',$info->uom_id)->value('name');
                 $info->added_by_admin = Admin::where(['id',$info->added_by])->value('name');
                 if ($data['updated_by'] > 0 and $data['updated_by']!= null) {
                     $data['updated_by_admin'] = Admin::where('id',  $data['updated_by'] )->value('name');
@@ -107,7 +113,7 @@ class Suppliers_with_ordersController extends Controller
             $item_cards = Inv_itemcard::select('name','item_code','item_type')->where(['active'=>1,'com_code'=>$com_code])->orderby('id','DESC')->get();
 
         }else{
-            $item_cards = array();
+            $item_cards = "";
 
         }
 
@@ -122,9 +128,9 @@ class Suppliers_with_ordersController extends Controller
     }
     public function get_item_uoms (Request $request){
         if($request->ajax()){
-             $item_code = $request->item_code;
+        $item_code = $request->item_code;
            $com_code = auth()->user()->com_code ;
-           $item_card_data = Inv_itemcard::select('does_has_retailunit','retail_uom_id ','uom_id')->where(['item_code'=>$item_code , 'com_code'=>$com_code])->first();
+           $item_card_data = Inv_itemcard::select('does_has_retailunit','retail_uom_id','uom_id')->where(['item_code'=>$item_code , 'com_code'=>$com_code])->first();
          if(!empty($item_card_data)){
             if($item_card_data['does_has_retailunit']==1){
                 $item_card_data['parent_uom_name'] = Inv_uom::where(['id'=>$item_card_data['uom_id']])->value('name');
@@ -136,6 +142,7 @@ class Suppliers_with_ordersController extends Controller
 
          }
         }
+
             return view('admin.suppliers_with_orders.get_item_uoms',['item_card_data'=>$item_card_data]);
     }
 }
@@ -223,6 +230,51 @@ public function reload_parent_pill (Request $request){
         }
    }
 
+
+
+}
+public function edit($id){
+    $com_code = auth()->user()->com_code ;
+    $data = SuppliersWith_order::select()->where(['id'=>$id , 'com_code'=>$com_code , 'order_type'=> 1 ])->first();
+    if(empty($data)){
+        return redirect()->route('admin.supplier_order.index')->with(['error' => 'عفوا غير قادر على الوصول الى البياات المطلوبة !!']);
+}
+if($data['is_approved']==1){
+    return redirect()->route('admin.supplier_order.index')->with(['error' => 'لا يمكن تحديث فاتورة معتمدة ومؤرشفة!!']);
+}
+
+    $suppliers = Supplier::select('name','supplier_code')->where(['com_code'=>$com_code,'active'=>1])->orderby('id','DESC')->paginate(PAGINATION_COUNT);
+    $stores = Store::select('id', 'name')->where(['com_code'=>$com_code , 'active'=>1])->orderby('id','DESC')->get();
+    return view('admin.suppliers_with_orders.edit',['data'=>$data, 'suppliers'=>$suppliers,'stores'=>$stores]);
+}
+public function update($id,Suppliers_with_ordersRequest $request){
+    try{
+    $com_code = auth()->user()->com_code ;
+    $data = SuppliersWith_order::select('is_approved')->where(['id'=>$id , 'com_code'=>$com_code , 'order_type'=> 1 ])->first();
+    if(empty($data)){
+        return redirect()->route('admin.supplier_order.index')->with(['error' => 'عفوا غير قادر على الوصول الى البياات المطلوبة !!']);
+}
+$supplierdata = Supplier::select('account_number')->where(['supplier_code'=>$request->supplier_code,'com_code'=>$com_code])->first();
+if(empty($supplierdata)){
+   return redirect()->back()->with(['error'=>'عفوا غير قادر على الوصول الى بيانات المورد المحدد '])->withInput();
+}
+
+$data_update['order_date'] = $request->order_date;
+$data_update['order_type'] = 1 ;
+$data_update['DOC_NO'] = $request->DOC_NO;
+$data_update['supplier_code'] = $request->supplier_code;
+$data_update['pill_type'] = $request->pill_type;
+$data_update['store_id'] = $request->store_id;
+$data_update['account_number']=$supplierdata['account_number'];
+$data_update['updated_by'] = auth()->user()->id;
+$data_update['updated_at'] = date('Y-m-d H:i:s');
+$data_update['com_code'] = $com_code;
+SuppliersWith_order::where(['id'=>$id , 'com_code'=>$com_code , 'order_type'=>1])->update($data_update);
+return redirect()->route('admin.supplier_order.show',$id)->with(['success' => 'لقد تم اضافة البيانات بنجاح']);
+
+    }catch(\Exception $ex){
+        return redirect()->back()->with(['error'=>'عفوا حدث خطأ ما '.$ex->getMessage()]);
+    }
 
 
 }

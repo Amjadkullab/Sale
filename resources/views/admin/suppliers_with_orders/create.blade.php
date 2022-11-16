@@ -2,6 +2,11 @@
 @extends('layouts.master')
 @section('title', ' المشتريات')
 @section('contentheader', 'حركات مخزنية')
+@section("css")
+<link rel="stylesheet" href="{{ asset('admin_assets/plugins/select2/css/select2.min.css') }}">
+<link rel="stylesheet" href="{{ asset('admin_assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+
+@endsection
 @section('contentheaderlink')
     <a href="{{ route('admin.supplier_order.index') }}"> فواتير المشتريات</a>
 @endsection
@@ -23,7 +28,7 @@
         @csrf
         <div class="form-group">
           <label>  تاريخ الفاتورة</label>
-          <input name="order_date" id="order_date" type="date" value="@php echo date("Y-m-d"); @endphp" class="form-control" value="{{ old('order_date') }}"    >
+          <input name="order_date" id="order_date" type="date" value="@php echo date("Y-m-d"); @endphp" class="form-control" value="{{old('order_date') }}"    >
           @error('order_date')
           <span class="text-danger">{{ $message }}</span>
           @enderror
@@ -41,11 +46,25 @@
               <option value="">اختر المورد</option>
               @if (@isset($suppliers) && !@empty($suppliers))
              @foreach ($suppliers as $info )
-               <option @if(old('suuplier_code')==$info->supplier_code) selected="selected" @endif value="{{ $info->supplier_code }}"> {{ $info->name }} </option>
+               <option @if(old('supplier_code')==$info->supplier_code) selected="selected" @endif value="{{ $info->supplier_code }}"> {{ $info->name }} </option>
              @endforeach
               @endif
             </select>
-            @error('suuplier_code')
+            @error('supplier_code')
+            <span class="text-danger">{{ $message }}</span>
+            @enderror
+            </div>
+          <div class="form-group">
+            <label>بيانات المخازن</label>
+            <select name="store_id" id="store_id" class="form-control select2">
+              <option value="">اختر المخزن المستلم للفاتورة</option>
+              @if (@isset($stores) && !@empty($stores))
+             @foreach ($stores as $info )
+               <option @if(old('store_id')==$info->id) selected="selected" @endif value="{{ $info->id }}"> {{ $info->name }} </option>
+             @endforeach
+              @endif
+            </select>
+            @error('store_id')
             <span class="text-danger">{{ $message }}</span>
             @enderror
             </div>
@@ -107,16 +126,20 @@
 
 @endsection
 
-{{-- @section("script")
+@section("script")
+<script  src="{{asset('admin_assets/js/suppliers_orders.js')}}"> </script>
 
-<script  src="{{ asset('assets/admin/plugins/select2/js/select2.full.min.js') }}"> </script>
+<script  src="{{ asset('admin_assets/plugins/select2/js/select2.full.min.js') }}"> </script>
 <script>
-  //Initialize Select2 Elements
-  $('.select2').select2({
-    theme: 'bootstrap4'
-  });
-  </script>
-@endsection --}}
+    //Initialize Select2 Elements
+    $('.select2').select2({
+      theme: 'bootstrap4'
+    });
+    </script>
 
+
+
+
+@endsection
 
 
