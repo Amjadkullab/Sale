@@ -160,6 +160,7 @@ Route::post('/supplier_order/load_modal_add_details',[Suppliers_with_ordersContr
 Route::post('/supplier_order/reload_itemsdetails',[Suppliers_with_ordersController::class,'reload_itemsdetails'])->name('admin.supplier_order.reload_itemsdetails');
 Route::post('/supplier_order/reload_parent_pill',[Suppliers_with_ordersController::class,'reload_parent_pill'])->name('admin.supplier_order.reload_parent_pill');
 Route::post('/supplier_order/load_edit_item_details',[Suppliers_with_ordersController::class,'load_edit_item_details'])->name('admin.supplier_order.load_edit_item_details');
+Route::post('/supplier_order/edit_item_details',[Suppliers_with_ordersController::class,'edit_item_details'])->name('admin.supplier_order.edit_item_details');
 //end supplier order
 
 

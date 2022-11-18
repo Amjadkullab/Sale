@@ -38,12 +38,13 @@
 
  </div>
 
- <div class="col-md-4  relatied_to_itemCard" id="UomDivAdd>
-     <div class="form-group">
-         <label for="">   الكمية المستلمة    </label>
-         <input oninput="this.value=this.value.replace(/[^0-9]/g ,'');" value="{{$item_data_details['deliverd_quantity']*1}}"  id="quantity_add" class="form-control"  placeholder="أدخل اخر رقم صرف نقدية لهده الخزنة" oninvalid="setCustomValidity('من فضلك أدخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}">
-      </div>
-    </div>
+ <div class="col-md-4  relatied_to_itemCard" id="UomDivAdd" style="display: none;">
+    <div class="form-group">
+        <label for="">   الكمية المستلمة    </label>
+        <input oninput="this.value=this.value.replace(/[^0-9]/g ,'');" value=""  id="quantity_add" class="form-control"  placeholder="أدخل اخر رقم صرف نقدية لهده الخزنة" oninvalid="setCustomValidity('من فضلك أدخل هذا الحقل')" onchange="try{setCustomValidity('')}catch(e){}">
+
+     </div>
+     </div>
  <div class="col-md-4  relatied_to_itemCard" >
      <div class="form-group">
          <label for="">    سعر الوحدة    </label>
@@ -72,12 +73,14 @@
 
       </div>
       </div>
+
       <div class="col-md-12">
         <div class="form-group text-center">
-        <button type="button" class="btn btn-sm btn-danger" id="EditDetailsitem" data-dismiss="modal">تعديل للفاتورة</button>
+        <button data-id={{$item_data_details['id']}} type="button" class="btn btn-sm btn-danger" id="EditDetailsitem" data-dismiss="modal">تعديل للفاتورة</button>
     </div>
     </div>
      </div>
+
 
 
 

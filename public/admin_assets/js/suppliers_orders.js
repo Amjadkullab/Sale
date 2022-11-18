@@ -242,9 +242,6 @@ $(document).ready(function(){
           $("#Add_item_Modal").modal("show");
           $("#edit_item_Modal_body").html("");
           $("#edit_item_Modal").modal("hide");
-
-
-
         },
         error: function () {
 

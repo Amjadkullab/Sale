@@ -195,8 +195,8 @@
         <input type="hidden" id="ajax_reload_parent_pill" value="{{route('admin.supplier_order.reload_parent_pill')}}">
         <input type="hidden" id="ajax_load_edit_item_details" value="{{route('admin.supplier_order.load_edit_item_details')}}">
         <input type="hidden" id="ajax_load_modal_add_details" value="{{route('admin.supplier_order.load_modal_add_details')}}">
-        {{-- <input type="hidden" id="ajax_edit_item_details" value="{{ route('admin.suppliers_orders.edit_item_details') }}">
-        <input type="hidden" id="ajax_load_modal_approve_invoice" value="{{ route('admin.suppliers_orders.load_modal_approve_invoice') }}">
+        <input type="hidden" id="ajax_edit_item_details" value="{{ route('admin.supplier_order.edit_item_details') }}">
+        {{-- <input type="hidden" id="ajax_load_modal_approve_invoice" value="{{ route('admin.suppliers_orders.load_modal_approve_invoice') }}">
         <input type="hidden" id="ajax_load_usershiftDiv" value="{{ route('admin.suppliers_orders.load_usershiftDiv') }}"> --}}
 
 

@@ -305,11 +305,6 @@ public function load_edit_item_details(Request $request){
                }
 
 
-
-
-
-
-
                 return view('admin.suppliers_with_orders.load_edit_item_details',['parent_pill_data'=>$parent_pill_data,'item_data_details'=>$item_data_details,'item_cards'=>$item_cards,'item_card_data'=>$item_card_data]);
 
             }
@@ -318,9 +313,85 @@ public function load_edit_item_details(Request $request){
          }
     }
 
+}
+public function load_modal_add_details(Request $request){
+    if($request->ajax()){
+
+        $com_code = auth()->user()->com_code ;
+
+        $parent_pill_data = SuppliersWith_order::select('is_approved')->where(['auto_serial'=>$request->autoserailparent,'com_code'=>$com_code,'order_type'=>1])->first();
+        if(!empty($parent_pill_data)){
+            if($parent_pill_data['is_approved']==0){
+
+                $item_data_details = suppliers_with_orders_detail::select()->where(['suppliers_with_orders_auto_serial'=>$request->autoserailparent,'com_code'=>$com_code,'order_type'=>1,'id'=>$request->id])->first();
+                $item_cards = Inv_itemcard::select('name','item_code','item_type')->where(['active'=>1,'com_code'=>$com_code])->orderby('id','DESC')->get();
+
+                return view('admin.suppliers_with_orders.load_add_new_itemdetails',['parent_pill_data'=>$parent_pill_data,'item_data_details'=>$item_data_details,'item_cards'=>$item_cards]);
+
+            //     $item_card_data = Inv_itemcard::select('does_has_retailunit','retail_uom_id','uom_id')->where(['item_code'=>$item_data_details['item_code'] , 'com_code'=>$com_code])->first();
+            //     if(!empty($item_card_data)){
+            //        if($item_card_data['does_has_retailunit']==1){
+            //            $item_card_data['parent_uom_name'] = Inv_uom::where(['id'=>$item_card_data['uom_id']])->value('name');
+            //            $item_card_data['retail_uom_name'] = Inv_uom::where(['id'=>$item_card_data['retail_uom_id']])->value('name');
+            //        }
+
+            //     else{
+            //        $item_card_data['parent_uom_name'] = Inv_uom::where(['id'=>$item_card_data['uom_id']])->value('name');
+
+            //     }
+            //    }
 
 
+            }
 
 
+         }
+    }
+
+}
+public function edit_item_details(Request $request){
+
+    if($request->ajax()){
+
+        $com_code = auth()->user()->com_code ;
+
+        $parent_pill_data = SuppliersWith_order::select('is_approved','order_type','tax_value','discount_value')->where(['auto_serial'=>$request->autoserailparent,'com_code'=>$com_code,'order_type'=>1])->first();
+        if(!empty($parent_pill_data)){
+            if($parent_pill_data['is_approved']==0){
+                $data_to_update['item_code']=$request->item_code_add;
+                $data_to_update['deliverd_quantity']=$request->quantity_add ;
+                $data_to_update['unit_price']=$request->price_add;
+                $data_to_update['uom_id']=$request->uom_id_Add ;
+                $data_to_update['isparentuom']=$request->isparentuom ;
+                if($request->type == 2){
+                    $data_to_update['production_date']=$request->production_date ;
+                    $data_to_update['expire_date']=$request->expire_date ;
+                }
+                $data_to_update['item_card_type']=$request->type;
+                $data_to_update['total_price']=$request->total_add;
+                $data_to_update['order_date']=$parent_pill_data['order_date'];
+
+                $data_to_update['updated_by'] = auth()->user()->id;
+                $data_to_update['updated_at'] = date('Y-m-d H:i:s');
+                $data_to_update['com_code'] = $com_code;
+                $flag = suppliers_with_orders_detail::where(['id'=>$request->id,'com_code'=>$com_code,'order_type'=>1,'suppliers_with_orders_auto_serial'=>$request->autoserailparent])->update($data_to_update);
+              if($flag){
+
+              $total_details_sum =  suppliers_with_orders_detail::where(['suppliers_with_orders_auto_serial	'=>$request->autoserailparent , 'com_code'=>$com_code,'order_type'=>1])->sum('total_price');
+              $dataUpdateParent['total_cost_items'] =$total_details_sum ;
+              $dataUpdateParent['total_before_discount'] =$total_details_sum+$parent_pill_data['tax_value'];
+              $dataUpdateParent['total_cost'] =$dataUpdateParent['total_before_discount']-$parent_pill_data['discount_value'] ;
+              $dataUpdateParent['updated_by'] = auth()->user()->id;
+              $dataUpdateParent['updated_at'] = date('Y-m-d H:i:s');
+              SuppliersWith_order::where(['auto_serial'=>$request->autoserailparent , 'com_code'=>$com_code,'order_type'=>1])->update($dataUpdateParent);
+
+
+            }
+
+
+         }
+    }
+
+}
 }
 }
