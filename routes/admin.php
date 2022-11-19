@@ -161,6 +161,8 @@ Route::post('/supplier_order/reload_itemsdetails',[Suppliers_with_ordersControll
 Route::post('/supplier_order/reload_parent_pill',[Suppliers_with_ordersController::class,'reload_parent_pill'])->name('admin.supplier_order.reload_parent_pill');
 Route::post('/supplier_order/load_edit_item_details',[Suppliers_with_ordersController::class,'load_edit_item_details'])->name('admin.supplier_order.load_edit_item_details');
 Route::post('/supplier_order/edit_item_details',[Suppliers_with_ordersController::class,'edit_item_details'])->name('admin.supplier_order.edit_item_details');
+Route::get('/supplier_order/delete_details/{id}/{id_parent}',[Suppliers_with_ordersController::class,'delete_details'])->name('delete_details');
+Route::get('/supplier_order/do_approved/{id}',[Suppliers_with_ordersController::class,'do_approved'])->name('admin.supplier_order.do_approved');
 //end supplier order
 
 

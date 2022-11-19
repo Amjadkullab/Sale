@@ -18,7 +18,7 @@ class Suppliers_with_ordersController extends Controller
     public function index()
     {
         $com_code = auth()->user()->com_code ;
-        $data = SuppliersWith_order::select()->where(['com_code'=>$com_code])->orderby('id', 'DESC')->paginate(PAGINATION_COUNT);
+        $data = SuppliersWith_order::select()->where(['com_code'=>$com_code,'order_type'=>1])->orderby('id', 'DESC')->paginate(PAGINATION_COUNT);
         if (!empty($data)) {
             foreach ($data as $info){
                 $info->added_by_admin=Admin::where('id', $info->added_by)->value('name');
@@ -29,8 +29,11 @@ class Suppliers_with_ordersController extends Controller
             }
         }
 
-        return view('admin.suppliers_with_orders.index', ['data' => $data]);
+
     }
+    $suppliers = Supplier::select('supplier_code','name')->where(['com_code'=>$com_code])->orderby('id','DESC')->first();
+    $stores = Supplier::select('id','name')->where(['com_code'=>$com_code,'active'=>1])->orderby('id','DESC')->first();
+    return view('admin.suppliers_with_orders.index', ['data' => $data,'suppliers'=>$suppliers,'stores'=>$stores]);
     }
     public function create()
     {
@@ -96,7 +99,7 @@ class Suppliers_with_ordersController extends Controller
       if ($data['updated_by'] > 0 and $data['updated_by']!= null) {
           $data['updated_by_admin'] = Admin::where('id',  $data['updated_by'] )->value('name');
       }
-        $details = suppliers_with_orders_detail::select()->where(['suppliers_with_orders_auto_serial'=>$data['auto_serial'],'order_type'=>1,'com_code'=>$com_code])->orderby('id','DESC')->get(); // treasuries_id هي الخزنة الاب
+        $details = suppliers_with_orders_detail::select()->where(['suppliers_with_orders_auto_serial'=>$data['auto_serial'],'order_type'=>1,'com_code'=>$com_code])->orderby('id','DESC')->first(); // treasuries_id هي الخزنة الاب
         if(!empty($details)){
             foreach($details as $info){
                 $info->item_card_name = Inv_itemcard::where('item_code',$info->item_code)->value('name');
@@ -110,15 +113,15 @@ class Suppliers_with_ordersController extends Controller
         }
         // if pill still open
         if($data['is_approved']==0){
-            $item_cards = Inv_itemcard::select('name','item_code','item_type')->where(['active'=>1,'com_code'=>$com_code])->orderby('id','DESC')->get();
+            $item_cards=Inv_itemcard::select('name','item_code','item_type')->where(['active'=>1,'com_code'=>$com_code])->orderby('id','DESC')->first();
 
         }else{
-            $item_cards = "";
+            $item_cards= array('');
 
         }
 
 
-    return view('admin.suppliers_with_orders.show',['data'=>$data , 'details'=> $details,'item_cards'=>$item_cards]);
+    return view('admin.suppliers_with_orders.show',['data'=>$data,'details'=> $details,'item_cards'=>$item_cards]);
 
         }catch(\Exception $ex){
         return redirect()->back()->with(['error' => 'عفوا حدث خطا ما!' . $ex->getMessage()]);
@@ -149,20 +152,20 @@ class Suppliers_with_ordersController extends Controller
     public function add_new_details (Request $request){
         if($request->ajax()){
              $item_code = $request->item_code;
-           $com_code = auth()->user()->com_code ;
-           $suuplier_with_order =SuppliersWith_order::select('is_approved','order_date','tax_value','discount_value')->where(['auto_serial'=>$request->autoserailparent , 'com_code'=>$com_code,'order_type'=>1])->first();
+           $com_code = auth()->user()->com_code;
+           $suuplier_with_order =SuppliersWith_order::select('is_approved','order_date','tax_value','discount_value')->where(['auto_serial'=>$request->autoserailparent,'com_code'=>$com_code,'order_type'=>1])->first();
          if(!empty($suuplier_with_order)){
             if($suuplier_with_order['is_approved']==0){
-                $data_insert['suuplier_with_order']=$request->suuplier_with_order;
+                $data_insert['suppliers_with_orders_auto_serial'] = $request->autoserailparent;
                 $data_insert['order_type']=1;
                 $data_insert['item_code']=$request->item_code_add;
-                $data_insert['deliverd_quantity']=$request->quantity_add ;
+                $data_insert['deliverd_quantity']=$request->quantity_add;
                 $data_insert['unit_price']=$request->price_add;
                 $data_insert['uom_id']=$request->uom_id_Add ;
-                $data_insert['isparentuom']=$request->isparentuom ;
+                $data_insert['isparentuom']=$request->isparentuom;
                 if($request->type == 2){
-                    $data_insert['production_date']=$request->production_date ;
-                    $data_insert['expire_date']=$request->expire_date ;
+                    $data_insert['production_date']=$request->production_date;
+                    $data_insert['expire_date']=$request->expire_date;
                 }
                 $data_insert['item_card_type']=$request->type;
                 $data_insert['total_price']=$request->total_add;
@@ -171,12 +174,12 @@ class Suppliers_with_ordersController extends Controller
                 $data_insert['added_by'] = auth()->user()->id;
                 $data_insert['created_at'] = date('Y-m-d H:i:s');
                 $data_insert['com_code'] = $com_code;
-              $flag =  suppliers_with_orders_detail::create($data_insert);
+              $flag=suppliers_with_orders_detail::create($data_insert);
               if($flag){
 
-              $total_details_sum =  suppliers_with_orders_detail::where(['suppliers_with_orders_auto_serial	'=>$request->autoserailparent , 'com_code'=>$com_code,'order_type'=>1])->sum('total_price');
-              $dataUpdateParent['total_cost_items'] =$total_details_sum ;
-              $dataUpdateParent['total_before_discount'] =$total_details_sum+$suuplier_with_order['tax_value'];
+              $total_details_sum =  suppliers_with_orders_detail::where(['suppliers_with_orders_auto_serial'=>$request->autoserailparent ,'com_code'=>$com_code,'order_type'=>1])->sum('total_price');
+              $dataUpdateParent['total_cost_items'] =$total_details_sum;
+              $dataUpdateParent['total_before_discount']=$total_details_sum+$suuplier_with_order['tax_value'];
               $dataUpdateParent['total_cost'] =$dataUpdateParent['total_before_discount']-$suuplier_with_order['discount_value'] ;
               $dataUpdateParent['updated_by'] = auth()->user()->id;
               $dataUpdateParent['updated_at'] = date('Y-m-d H:i:s');
@@ -393,5 +396,86 @@ public function edit_item_details(Request $request){
     }
 
 }
+}
+public function delete($id){
+    try{
+        $com_code = auth()->user()->com_code;
+        $parent_pill_data = SuppliersWith_order::select('is_approved','auto_serial')->where(['id'=>$id,'com_code'=>$com_code,'order_type'=>1])->first();
+        if(empty($parent_pill_data)){
+
+            return redirect()->back()->with(['error'=>'عفوا حدث خطأ ما ']);
+
+        }
+
+            if($parent_pill_data['is_approved']==1){
+                if(empty($parent_pill_data)){
+
+                    return redirect()->back()->with(['error'=>'  عفوا لا يمكن حذف تفاصيل فاتورة معتمدة ومؤرشفة']);
+
+                }
+
+            }
+                $item_row =SuppliersWith_order::find($id);
+                if(!empty( $item_row ))
+                $flag =$item_row::where(['id'=>$id,'com_code'=>$com_code,'order_type'=>1])->delete();
+          if($flag){
+            suppliers_with_orders_detail::where(['suppliers_with_orders_auto_serial'=>$parent_pill_data['auto_serial'],'com_code'=>$com_code,'order_type'=>1])->delete();
+            return redirect()->route('admin.supplier_order.index')->with(['success'=>'تم الحذف البيانات بنجاح']);
+          }
+    }catch(\Exception $ex){
+        return redirect()->back()->with(['error'=>'عفوا حدث خطا ما '.$ex->getMessage()])->withInput();
+    }
+}
+public function delete_details($id,$parent_id)
+{
+    try{
+        $com_code = auth()->user()->com_code;
+        $parent_pill_data = SuppliersWith_order::select('is_approved','auto_serial')->where(['id'=>$parent_id,'com_code'=>$com_code,'order_type'=>1])->first();
+        if(empty($parent_pill_data)){
+
+            return redirect()->back()->with(['error'=>'عفوا حدث خطأ ما ']);
+
+        }
+
+            if($parent_pill_data['is_approved']==1){
+                if(empty($parent_pill_data)){
+
+                    return redirect()->back()->with(['error'=>'  عفوا لا يمكن حذف تفاصيل فاتورة معتمدة ومؤرشفة']);
+
+                }
+
+            }
+                $item_row =suppliers_with_orders_detail::find($id);
+                if(!empty( $item_row ))
+                $flag =$item_row::delete();
+                if( $flag){
+                    $total_details_sum =  suppliers_with_orders_detail::where(['suppliers_with_orders_auto_serial'=>$parent_pill_data['auto_serial'] , 'com_code'=>$com_code,'order_type'=>1])->sum('total_price');
+                    $dataUpdateParent['total_cost_items'] =$total_details_sum ;
+                    $dataUpdateParent['total_before_discount'] =$total_details_sum+$parent_pill_data['tax_value'];
+                    $dataUpdateParent['total_cost'] =$dataUpdateParent['total_before_discount']-$parent_pill_data['discount_value'] ;
+                    $dataUpdateParent['updated_by'] = auth()->user()->id;
+                    $dataUpdateParent['updated_at'] = date('Y-m-d H:i:s');
+                    SuppliersWith_order::where(['id'=>$parent_id , 'com_code'=>$com_code,'order_type'=>1])->update($dataUpdateParent);
+
+
+
+                    return redirect()->back()->with(['success'=>'تم الحذف بنجاح']);
+                }else{
+                    return redirect()->back()->with(['error'=>'عفوا حدث خطأ ما ']);
+                }
+
+
+
+
+
+
+    }catch(\Exception $ex){
+        return redirect()->back()->with(['error'=>'عفوا حدث خطا ما '.$ex->getMessage()])->withInput();
+    }
+
+
+}
+public function do_approved(){
+
 }
 }

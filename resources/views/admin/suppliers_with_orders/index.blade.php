@@ -71,13 +71,15 @@
                                             <td>
                                                 @if ($info->is_approved == 1)  معتمدة @else  مفتوحة@endif </td>
                                             <td>
+                                                @if($info->is_approved==0)
                                                 <a href="{{ route('admin.supplier_order.edit', $info->id) }}"
                                                     class="btn btn-sm btn-primary">تعديل</a>
                                                 <a href="{{ route('admin.supplier_order.delete', $info->id) }}"
                                                     class="btn btn-sm btn-danger are_you_sure">حذف</a>
                                                 <a href="{{ route('admin.supplier_order.delete', $info->id) }}"
                                                     class="btn btn-sm btn-success are_you_sure">اعتماد</a>
-                                                <a href="{{ route('admin.supplier_order.show', $info->id) }}"
+                                                    @endif
+                                                <a href="{{ route('admin.supplier_order.show',$info->id) }}"
                                                     class="btn btn-sm btn-info">الاصناف</a>
                                             </td>
 

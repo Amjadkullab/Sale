@@ -163,6 +163,7 @@
        @if($data['is_approved']==0)
 <a href="{{ route('admin.supplier_order.delete',$data['id']) }}" class="btn btn-sm are_you_shue  btn-danger">حذف</a>
 <a href="{{ route('admin.supplier_order.edit',$data['id']) }}" class="btn btn-sm btn-success">تعديل</a>
+<a href="{{ route('admin.supplier_order.do_approved',$data['id']) }}" class="btn btn-sm btn-primary">اعتماد</a>
 {{-- <button id="load_close_approve_invoice"  class="btn btn-sm btn-primary">تحميل الاعتماد والترحيل</button> --}}
 
 @endif
