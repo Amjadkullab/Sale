@@ -1,17 +1,17 @@
 @extends('layouts.master')
-@section('title', 'الضبط العام')
-@section('contentheader', 'الخزن ')
+@section('title', ' الصلاحيات')
+@section('contentheader', 'المستخدمين ')
 @section('contentheaderlink')
-    <a href="{{ route('admin.treasuries.index') }}">الخزن</a>
+    <a href="{{ route('admin.admin_accounts.index') }}">المستخدمين</a>
 @endsection
-@section('contentheaderactive', '  عرض التفاصيل')
+@section('contentheaderactive', 'عرض الصلاحيات الخاصة ')
 
 @section('content')
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title card_title_center">تفاصيل الخزنة  </h3>
+                    <h3 class="card-title card_title_center">تفاصيل المستخدم </h3>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
@@ -19,26 +19,12 @@
                         <table id="example2" class="table table-bordered table-hover">
 
                                 <tr>
-                                    <td class="width30">اسم الخزنة</td>
-                                    <td>{{ $data['name'] }}</td>
-                                </tr>
-                                <tr>
-                                    <td class="width30">اخر ايصال صرف </td>
-                                    <td>{{ $data['last_isal_exchange']}}</td>
-                                </tr>
-                                <tr>
-                                    <td class="width30"> اخر ايصال تحصيل</td>
-                                    <td>{{ $data['last_isal_collect']}}</td>
+                                    <td class="width30">اسم المستخدم</td>
+                                    <td>{{$data['name']}}</td>
                                 </tr>
 
                                 <tr>
-                                    <td class="width30">هل رئيسية</td>
-                                    <td> @if ($data['is_master'] == 1) نعم @else لا @endif
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td class="width30">حالة تفعيل  الشركة</td>
+                                    <td class="width30">حالة تفعيل  </td>
                                     <td> @if ($data['active'] == 1) مفعل @else معطل @endif
                                     </td>
                                 </tr>
@@ -86,7 +72,7 @@
                                      لا يوجد تحديث
 
                                      @endif
-                                     <a href="{{ route('admin.treasuries.edit',$data['id']) }}" class="btn btn-sm btn-success">تعديل</a>
+                                     <a href="{{ route('admin.admin_accounts.edit',$data['id']) }}" class="btn btn-sm btn-success">تعديل</a>
                                     </td>
 
                                 </tr>
@@ -94,13 +80,13 @@
          <!--   treasuries delivery            -->
 
          <div class="card-header">
-            <h3 class="card-title card_title_center">الخزن الفرعية التي سوف تسلم عهدتها الى الخزنة {{ $data['name'] }}
-               <a href="{{route('admin.treasuries.Add_treasuries_delivery',$data['id'])}}"class = "btn btn-sm btn-success"> اضافة جديد</a>
+            <h3 class="card-title card_title_center"> الخزن المضافة لصلاحيات المستخدم
+               <button href="#" class = "btn btn-sm btn-success" data-toggle = "modal" data-target="#Add_treasuries_modal" > اضافة جديد</button>
 
             </h3>
         </div>
          <div id="ajax_responce_searchDiv">
-            @if (@isset($treasuries_delivery) && !@empty($treasuries_delivery))
+            @if (@isset($admins_treasuries) && !@empty($admins_treasuries))
             @php
                 $i = 1;
             @endphp
@@ -114,7 +100,7 @@
                     <th>تاريخ التحديث</th> --}}
                 </thead>
                 <tbody>
-                    @foreach ($treasuries_delivery as $info)
+                    @foreach ($admins_treasuries as $info)
                         <tr>
                             <td>{{ $i }}</td>
                             <td>{{ $info->name }}</td>
@@ -138,7 +124,7 @@
 
 
 
-                            {{-- <td> @php
+                            <td> @php
                                 $dt = new DateTime($info->created_at);
                                 $date = $dt->format('Y-m-d');
                                 $time = $dt->format('h:i');
@@ -171,7 +157,7 @@
                                     لا يوجد تحديث
                                 @endif
 
-                            </td> --}}
+                            </td>
                         </tr>
                         @php
                             $i++;
@@ -181,14 +167,73 @@
             </table>
         @endif
         </div>
-  @else
+        @else
           <div class="alert alert-danger">
             !! عفوا لايوجد بيانات لعرضها
           </div>
           @endif
+
       <!--  end treasuries delivery            -->
                 </div>
             </div>
         </div>
     </div>
+
+
+
+
+
+
+
+    <div class="modal fade" id="Add_treasuries_modal">
+        <div class="modal-dialog modal-xl" >
+          <div class="modal-content bg-info">
+            <div class="modal-header">
+              <h4 class="modal-title">اضافة خزن للمستخدم</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body" id="Add_treasuries_modal_body" style="background-color: white !important; color:black;">
+                <form action= {{ route('admin.admin_accounts.Add_treasuries_to_admin',$data['id']) }} method="POST" >
+                    @csrf
+
+                    <div class="form-group">
+                     <label >بيانات الخزن</label>
+                    <select name="treasuries_id"  id="treasuries_id" class="form-control" >
+                      <option value="">اختر الخزنة</option>
+                      @if(@isset($treasuries) && !@empty($treasuries))
+                      @foreach ($treasuries as $info)
+                      <option  value="{{$info->id}}">{{ $info->name }}</option>
+                      @endforeach
+                      @endif
+                    </select>
+
+                  </div>
+                  <div class="form-group text-center ">
+                      <button type="submit" class="btn btn-success btn-sm">اضافة الخزنة للمستخدم </button>
+
+                    </div>
+                  </form>
+              </div>
+
+            <div class="modal-footer justify-content-between bg-info">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">اغلاق</button>
+
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+
+
+
+
+
+
+
+
+
+
+
 @endsection

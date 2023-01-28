@@ -10,6 +10,7 @@ use App\Http\Controllers\Inv_UomController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TreasuriesController;
 use App\Http\Controllers\Admin_panel_settingsController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\InvItemcardCategorieController;
 use App\Http\Controllers\InvItemCardController;
@@ -164,6 +165,19 @@ Route::post('/supplier_order/edit_item_details',[Suppliers_with_ordersController
 Route::get('/supplier_order/delete_details/{id}/{id_parent}',[Suppliers_with_ordersController::class,'delete_details'])->name('delete_details');
 Route::get('/supplier_order/do_approved/{id}',[Suppliers_with_ordersController::class,'do_approved'])->name('admin.supplier_order.do_approved');
 //end supplier order
+//start admin_accounts
+
+Route::get('/admin_accounts/index',[AdminController::class,'index'])->name('admin.admin_accounts.index');
+Route::get('/admin_accounts/create',[AdminController::class,'create'])->name('admin.admin_accounts.create');
+Route::post('/admin_accounts/store',[AdminController::class,'store'])->name('admin.admin_accounts.store');
+Route::get('/admin_accounts/edit/{id}',[AdminController::class,'edit'])->name('admin.admin_accounts.edit');
+Route::post('/admin_accounts/update/{id}',[AdminController::class,'update'])->name('admin.admin_accounts.update');
+Route::post('/admin_accounts/ajax_search',[AdminController::class,'ajax_search'])->name('admin.admin_accounts.ajax_search');
+Route::get('/admin_accounts/details/{id}',[AdminController::class,'details'])->name('admin.admin_accounts.details');
+Route::get('/admin_accounts/Add_treasuries_delivery/{id}',[AdminController::class,'Add_treasuries_delivery'])->name('admin.admin_accounts.Add_treasuries_delivery');
+Route::post('/admin_accounts/Add_treasuries_to_admin/{id}',[AdminController::class,'Add_treasuries_to_admin'])->name('admin.admin_accounts.Add_treasuries_to_admin');
+Route::get('/admin_accounts/delete_treasuries_delivery/{id}',[AdminController::class,'delete_treasuries_delivery'])->name('admin.admin_accounts.delete_treasuries_delivery');
+//end admin_accoiunts
 
 
 });
