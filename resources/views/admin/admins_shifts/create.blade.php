@@ -26,7 +26,7 @@
                             <option selected value=""> من فضلك اختر الخزنة لاستلامها وبدأ الشفت</option>
                             @if(@isset($admins_treasuries) && !@empty($admins_treasuries) )
                             @foreach ($admins_treasuries as $info )
-                            <option  value="{{$info->id}}" @if ($info->available==false)disabled @endif>{{$info->treasuries_name}} @if ($info->available==false)(غير متاحة لاستخدامها حاليا مع مستخدم اخر) @endif</option>
+                            <option  value="{{$info->treasuries_id}}" @if ($info->available==false)disabled @endif>{{$info->treasuries_name}} @if ($info->available==false)(غير متاحة لاستخدامها حاليا مع مستخدم اخر) @endif</option>
                             @endforeach
                             @endif
                            </select>

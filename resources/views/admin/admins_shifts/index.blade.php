@@ -14,7 +14,12 @@
             <h3 class="card-title card_title_center">بيانات  شفتات الخزن للمستخدمين</h3>
             <input type="hidden" id="search_token" value="{{csrf_token() }}">
             {{-- <input type="hidden" id="ajax_search_url" value="{{ route('admin.uoms.ajax_search') }}"> --}}
+            @if (empty($checkExistsopenshifts))
             <a href="{{ route('admin.admin_shift.create') }}" class="btn btn-sm btn-success"> فتح شفت جديد</a>
+
+            @else
+
+            @endif
 
         </div>
 
@@ -44,17 +49,15 @@
 
                     <div id="ajax_responce_searchDiv">
                         @if (@isset($data) && !@empty($data) &&count($data)>0)
-                            @php
-                                $i = 1;
-                            @endphp
+
                             <table id="example2" class="table table-bordered table-hover">
                                 <thead class="custom_thead">
-                                    <th>مسلسل</th>
-                                    <th>اسم الوحدة</th>
-                                    <th>نوع الوحدة </th>
-                                    <th>حالة التفعيل</th>
-                                    <th>تاريخ الاضافة</th>
-                                    <th>تاريخ التحديث</th>
+                                    <th>كود الشفت</th>
+                                    <th>اسم المستخدم</th>
+                                    <th>اسم الخزنة </th>
+                                    <th> توقيت الفتح </th>
+                                    <th>حالة الانتهاء</th>
+                                    <th>حالة المراجعة</th>
                                     <th></th>
                                     {{-- <th>تاريخ الاضافة</th>
                                     <th>تاريخ التحديث</th> --}}
@@ -62,22 +65,15 @@
                                 <tbody>
                                     @foreach ($data as $info)
                                         <tr>
-                                            <td>{{ $i }}</td>
-                                            <td>{{ $info->name }}</td>
-                                            <td>
-                                                @if ($info->is_master == 1)
-                                                    وحدة أب
-                                                @else
-                                                    وحدة تجزئة
-                                                @endif
-                                            </td>
-                                            <td>
-                                                @if ($info->active == 1)
-                                                    مفعلة
-                                                @else
-                                                    معطل
-                                                @endif
-                                            </td>
+
+                                            <td>{{ $id}}
+                                            @if ($info->is_finished == 0 and $info->admin_id == auth()->user()->id)
+                                            <br>
+                                            <span style="color: brown">شفتك الحالي</span>
+
+                                            @endif</td>
+                                            <td>{{ $info->admin_name }}</td>
+                                            <td>{{ $info->treasuries_name}}</td>
                                             <td>
                                                 @php
                                                     $dt = new DateTime($info->created_at);
@@ -95,73 +91,34 @@
 
                                             </td>
                                             <td>
-                                                @if ($info->updated_by > 0 and $info->updated_by != null)
-                                                    @php
-                                                        $dt = new DateTime($info->updated_at);
-                                                        $date = $dt->format('Y-m-d');
-                                                        $time = $dt->format('h:i');
-                                                        $newDateTime = date('A', strtotime($time));
-                                                        $newDateTimeType = $newDateTime == 'AM' ? 'صباحا' : 'مساءا';
-                                                    @endphp
-
-                                                    {{ $date }} <br>
-                                                    {{ $time }}
-                                                    {{ $newDateTimeType }} <br>
-                                                    بواسطة
-                                                    {{ $info->updated_by_admin }}
+                                                @if ($info->is_finished == 1)
+                                                تم الانتهاء
                                                 @else
-                                                    لا يوجد تحديث
+                                                   ما زال مفتوح
                                                 @endif
+                                            </td>
+                                            <td>
+                                                @if ($info->is_delivered_and_reviews == 1)
+                                                 تمت المراجعة
+                                                @else
+                                                    @if ($info->is_finished==1)
+                                                    بانتظار المراجعة
+                                                    @else
 
+
+                                                    @endif
+                                                @endif
                                             </td>
 
 
                                             <td>
                                                 <a href="{{ route('admin.uoms.edit', $info->id) }}"
-                                                    class="btn btn-sm btn-primary">تعديل</a>
+                                                    class="btn btn-sm btn-primary">طباعة الكشف </a>
                                                 <a href="{{ route('admin.uoms.delete', $info->id) }}"
-                                                    class="btn btn-sm btn-danger are_you_sure">حذف</a>
+                                                    class="btn btn-sm btn-danger are_you_sure">كشف مختصر</a>
                                             </td>
-
-
-                                            {{-- <td> @php
-                                                $dt = new DateTime($info->created_at);
-                                                $date = $dt->format('Y-m-d');
-                                                $time = $dt->format('h:i');
-                                                $newDateTime = date('A', strtotime($time));
-                                                $newDateTimeType = $newDateTime == 'AM' ? 'صباحا' : 'مساءا';
-                                            @endphp
-                                                {{ $date }}<br>
-                                                {{ $time }}
-                                                {{ $newDateTimeType }}<br>
-                                                بواسطة
-                                                {{ $info->added_by_name }}
-                                            </td>
-                                            <td>
-                                                @if ($info->updated_by > 0 and $info->updated_by != null)
-
-                                                    @php
-                                                        $dt = new DateTime($info->updated_at);
-                                                        $date = $dt->format('Y-m-d');
-                                                        $time = $dt->format('h:i');
-                                                        $newDateTime = date('A', strtotime($time));
-                                                        $newDateTimeType = $newDateTime == 'AM' ? 'صباحا' : 'مساءا';
-                                                    @endphp
-
-                                                    {{ $date }} <br>
-                                                    {{ $time }}
-                                                    {{ $newDateTimeType }} <br>
-                                                    بواسطة
-                                                    {{ $info->updated_by_admin }}
-                                                @else
-                                                    لا يوجد تحديث
-                                                @endif
-
-                                            </td> --}}
                                         </tr>
-                                        @php
-                                            $i++;
-                                        @endphp
+
                                     @endforeach
                                 </tbody>
                             </table>

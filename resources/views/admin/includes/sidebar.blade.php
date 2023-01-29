@@ -56,8 +56,8 @@
                 </ul>
               </li>
 
-              <li class="nav-item has-treeview {{((request()->is('admin/accounttypes*')||request()->is('admin/accounts*')||request()->is('admin/customer*')||request()->is('admin/supplier_categories*')||request()->is('admin/supplier*')) && !request()->is('admin/supplier_order*') ) ? 'menu-open':'' }}">
-                <a href="#" class="nav-link {{((request()->is('admin/accounttypes*')||request()->is('admin/accounts*')||request()->is('admin/customer*')||request()->is('admin/supplier_categories*')||request()->is('admin/supplier*')) && !request()->is('admin/supplier_order*')) ? 'active':'' }}">
+              <li class="nav-item has-treeview {{((request()->is('admin/accounttypes*')||request()->is('admin/accounts*')||request()->is('admin/customer*')||request()->is('admin/supplier_categories*')||request()->is('admin/supplier*')||request()->is('admin/collect_transaction*')) && !request()->is('admin/supplier_order*')) ? 'menu-open':'' }}">
+                <a href="#" class="nav-link {{((request()->is('admin/accounttypes*')||request()->is('admin/accounts*')||request()->is('admin/customer*')||request()->is('admin/supplier_categories*')||request()->is('admin/supplier*')||request()->is('admin/collect_transaction*'))&& !request()->is('admin/supplier_order*')) ? 'active':'' }}">
                   <i class="nav-icon fas fa-tachometer-alt"></i>
                   <p>
                     الحسابات
@@ -106,6 +106,15 @@
 
                           <p>
                              حسابات الموردين
+
+                          </p>
+                        </a>
+                    </li>
+                  <li class="nav-item">
+                    <a href="{{ route('admin.collect_transaction.index') }}" class="nav-link {{ (request()->is('admin/collect_transaction*')) ? 'active':'' }}">
+
+                          <p>
+                              شاشة تحصيل النقدية
 
                           </p>
                         </a>

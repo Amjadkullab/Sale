@@ -12,6 +12,7 @@ use App\Http\Controllers\TreasuriesController;
 use App\Http\Controllers\Admin_panel_settingsController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Admins_ShiftsController;
+use App\Http\Controllers\CollectController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\InvItemcardCategorieController;
 use App\Http\Controllers\InvItemCardController;
@@ -185,6 +186,13 @@ Route::get('/admin_accounts/delete_treasuries_delivery/{id}',[AdminController::c
 Route::get('/admin_shift/index',[Admins_ShiftsController::class,'index'])->name('admin.admin_shift.index');
 Route::get('/admin_shift/create',[Admins_ShiftsController::class,'create'])->name('admin.admin_shift.create');
 Route::post('/admin_shift/store',[Admins_ShiftsController::class,'store'])->name('admin.admin_shift.store');
+
+//end admin_shifts
+//start admin_shifts
+
+Route::get('/collect_transaction/index',[CollectController::class,'index'])->name('admin.collect_transaction.index');
+Route::get('/collect_transaction/create',[CollectController::class,'create'])->name('admin.collect_transaction.create');
+Route::post('/collect_transaction/store',[CollectController::class,'store'])->name('admin.collect_transaction.store');
 
 //end admin_shifts
 

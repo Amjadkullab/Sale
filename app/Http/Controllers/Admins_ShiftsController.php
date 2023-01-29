@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AdminShiftsRequest;
 use App\Models\Admin;
 use Illuminate\Http\Request;
 use App\Models\Admins_Shifts;
@@ -16,12 +17,14 @@ class Admins_ShiftsController extends Controller
         if(!empty($data)){
 
             foreach($data as $info){
-              $info->added_by_admin = Admin::where('id', $info->added_by)->value('name');
+              $info->admin_name = Admin::where('id', $info->admin_id)->value('name');
               $info->treasuries_name = Treasuries::where('id', $info->treasuries_id)->value('name');
 
         }
+        $checkExistsopenshifts = Admins_Shifts::select('id')->where(['com_code' => $com_code, 'admin_id' => auth()->user()->id , 'is_finished'=>0])->first();
 
-          return view('admin.admins_shifts.index',['data'=>$data]);
+
+          return view('admin.admins_shifts.index',['data'=>$data,'checkExistsopenshifts'=>$checkExistsopenshifts]);
 
     }
     }
@@ -40,10 +43,49 @@ $info->available = false ;
         }
 
       }
-
-       return view('admin.admins_shifts.create',['admins_treasuries'=>$admins_treasuries]);
+       return view('admin.admins_shifts.create',['admins_treasuries'=>$admins_treasuries ]);
 
 
        }
+    }
+    public function store(AdminShiftsRequest $request)
+    {
+
+        try {
+
+            $com_code = auth()->user()->com_code;
+            $admin_id = auth()->user()->id;
+            // check if not exists
+            $checkExistsopenshifts = Admins_Shifts::select('id')->where(['com_code' => $com_code, 'admin_id' => $admin_id , 'is_finished'=>0])->first();
+            if ($checkExistsopenshifts !=null and !empty($checkExistsopenshifts)) {
+                return redirect()->route('admin.admin_shift.index')->with(['error' => ' عفوا هناك شفت مفتوح لديك بالفعل حاليا ولا يمكن فتح شفت جديد الا بعد اغلاق الشفت الحالي!' ]);
+            }
+            $checkExistsopentreasuries = Admins_Shifts::select('id')->where(['com_code' => $com_code, 'treasuries_id' => $request->treasuries_id , 'is_finished'=>0])->first();
+            if ($checkExistsopentreasuries !=null and !empty($checkExistsopentreasuries)) {
+                return redirect()->route('admin.admin_shift.index')->with(['error' => ' عفوا الخزنة المختارة مستخدمة بالفعل من قبل مستخدم اخر  ولا يمكن استخدامها الا بعد الانتهاء من الشفت الاخر!' ]);
+            }
+
+                $data_insert['admin_id'] = $admin_id;
+                $data_insert['treasuries_id'] = $request->treasuries_id;
+                $data_insert['start_date'] = date('Y-m-d H:i:s');
+                $data_insert['created_at'] = date('Y-m-d H:i:s');
+                $data_insert['added_by'] = auth()->user()->id;
+                $data_insert['com_code']  = $com_code;
+                $data_insert['date']= date('Y-m-d');
+               $flag = Admins_Shifts::create($data_insert);
+               if($flag){
+return redirect()->route('admin.admin_shifts.index')->with(['success'=> 'تم اضافة البيانات بنجاح']);
+               }else{
+                return redirect()->route('admin.admin_shift.index')->with(['error'=> 'عفوا حدث خطا ما']);
+               }
+
+        } catch (\Exception $ex) {
+            return redirect()->back()->with(['error' => 'عفوا حدث خطا ما!' . $ex->getMessage()])->withInput();
+        }
+    }
+
+    public function edit($id){
+        $data = Treasuries::select()->find($id);
+        return view('admin.treasuries.edit',['data'=>$data]);
     }
 }
