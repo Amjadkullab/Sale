@@ -67,7 +67,7 @@ public function Add_treasuries_to_admin($id , Request $request){
         if(empty($data)){
             return redirect()->route('admin.admin_accounts.index')->with(['error' => 'عفوا غير قادر على الوصول الى البيانات المطلوبة !!']);
     }
-    $admin_treasuries_exists = Admins_treasuries::select('id')->where('admin_id',$id)->where('treasuries_id',$request->treasuries_id)->where('com_code',$com_code)->get();
+    $admin_treasuries_exists = Admins_treasuries::select('id')->where(['admin_id'=>$id,'treasuries_id'=>$request->treasuries_id,'com_code'=>$com_code])->first();
     if(!empty($admin_treasuries_exists)){
         return redirect()->route('admin.admin_accounts.details',$id )->with(['error' => 'عفوا هده الخزنة مضافة من قبل لهذا المستخدم!!']);
 }

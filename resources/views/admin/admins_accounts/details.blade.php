@@ -120,11 +120,32 @@
                         {{$info->added_by_admin}}
 
                          </td>
+                         <td>
+                            @if ($info->updated_by > 0 and $info->updated_by != null)
+
+                                @php
+                                    $dt = new DateTime($info->updated_at);
+                                    $date = $dt->format('Y-m-d');
+                                    $time = $dt->format('h:i');
+                                    $newDateTime = date('A', strtotime($time));
+                                    $newDateTimeType = $newDateTime == 'AM' ? 'صباحا' : 'مساءا';
+                                @endphp
+
+                                {{ $date }} <br>
+                                {{ $time }}
+                                {{ $newDateTimeType }} <br>
+                                بواسطة
+                                {{ $info->updated_by_admin }}
+                            @else
+                                لا يوجد تحديث
+                            @endif
+
+                        </td>
                          <td><a href="{{ route('admin.delete_treasuries_delivery', $info->id) }}" class="btn btn-sm btn-danger are_you_sure"> حذف</a></td>
 
 
 
-                            <td> @php
+                            {{-- <td> @php
                                 $dt = new DateTime($info->created_at);
                                 $date = $dt->format('Y-m-d');
                                 $time = $dt->format('h:i');
@@ -136,28 +157,8 @@
                                 {{ $newDateTimeType }}<br>
                                 بواسطة
                                 {{ $info->added_by_name }}
-                            </td>
-                            <td>
-                                @if ($info->updated_by > 0 and $info->updated_by != null)
+                            </td> --}}
 
-                                    @php
-                                        $dt = new DateTime($info->updated_at);
-                                        $date = $dt->format('Y-m-d');
-                                        $time = $dt->format('h:i');
-                                        $newDateTime = date('A', strtotime($time));
-                                        $newDateTimeType = $newDateTime == 'AM' ? 'صباحا' : 'مساءا';
-                                    @endphp
-
-                                    {{ $date }} <br>
-                                    {{ $time }}
-                                    {{ $newDateTimeType }} <br>
-                                    بواسطة
-                                    {{ $info->updated_by_admin }}
-                                @else
-                                    لا يوجد تحديث
-                                @endif
-
-                            </td>
                         </tr>
                         @php
                             $i++;
