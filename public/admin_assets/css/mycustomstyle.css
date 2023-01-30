@@ -16,3 +16,10 @@
     background-color: #233490;
     color: #fff;
 }
+.custom-form {
+    border: 1px solid lightgrey;
+    border-radius:7px;
+    padding:10px;
+    background-color:beige;
+    margin-bottom:7px;
+}

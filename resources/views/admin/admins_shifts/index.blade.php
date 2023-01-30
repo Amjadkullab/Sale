@@ -66,12 +66,14 @@
                                     @foreach ($data as $info)
                                         <tr>
 
-                                            <td>{{ $id}}
-                                            @if ($info->is_finished == 0 and $info->admin_id == auth()->user()->id)
-                                            <br>
-                                            <span style="color: brown">شفتك الحالي</span>
+                                            <td>{{ $info->id }}
+                                                @if($info->is_finished==0 and $info->admin_id==auth()->user()->id)
+                                           <br>
+                                           <span style="color:brown"> شفتك الحالي</span>
 
-                                            @endif</td>
+                                                @endif
+
+                                              </td>
                                             <td>{{ $info->admin_name }}</td>
                                             <td>{{ $info->treasuries_name}}</td>
                                             <td>

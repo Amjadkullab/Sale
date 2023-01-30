@@ -23,7 +23,7 @@
                 <td> @if ($info->is_parent == 1)نعم  @else  لا @endif</td>
                 <td>{{$info->parent_account_name}}</td>
                 <td></td>
-                <td> @if ($info->is_archived == 1)مفعلة  @else معطل @endif</td>
+                <td> @if ($info->is_archived == 0)مفعلة  @else معطل @endif</td>
                 <td>
                   <a href="{{route('admin.accounts.edit',$info->id)}}" class="btn btn-sm btn-primary">تعديل</a>
                     <a href="{{ route('admin.accounts.delete',$info->id) }}" class="btn btn-sm btn-danger are_you_sure">حذف</a>

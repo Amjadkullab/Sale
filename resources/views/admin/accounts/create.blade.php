@@ -121,8 +121,8 @@
                         <label for="is_archived"> حالة التفعيل</label>
                        <select name="is_archived" id="is_archived" class="form-control" >
                          <option value="">اختر الحالة</option>
-                         <option @if (old('is_archived')==1) selected = "selected" @endif  value="1"> مفعل</option>
-                         <option @if (old('is_archived')==0 and old('is_archived')!= "") selected = "selected" @endif value="0"> معطل </option>
+                         <option @if (old('is_archived')==0 and old('is_archived')!= "") selected = "selected" @endif  value="0"> مفعل</option>
+                         <option @if (old('is_archived')==1) selected = "selected" @endif value="1">   معطل ومؤرشف </option>
                        </select>
                          @error('is_archived')
                          <span class="text-danger" >{{ $message }}</span>

@@ -74,7 +74,7 @@ $info->available = false ;
                 $data_insert['date']= date('Y-m-d');
                $flag = Admins_Shifts::create($data_insert);
                if($flag){
-return redirect()->route('admin.admin_shifts.index')->with(['success'=> 'تم اضافة البيانات بنجاح']);
+return redirect()->route('admin.admin_shift.index')->with(['success'=> 'تم اضافة البيانات بنجاح']);
                }else{
                 return redirect()->route('admin.admin_shift.index')->with(['error'=> 'عفوا حدث خطا ما']);
                }
