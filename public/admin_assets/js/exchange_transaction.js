@@ -1,6 +1,6 @@
 
 $(document).ready(function(){
-    $(document).on('click',"#do_collect_now_btn",function(){
+    $(document).on('click',"#do_exchange_now_btn",function(){
         var move_date = $("#move_date").val();
         if(move_date == ""){
             alert("من فضلك اختر التاريخ");
@@ -33,6 +33,17 @@ $(document).ready(function(){
             $("#money").focus();
             return false ;
         }
+        var treasuries_balance = $("#treasuries_balance").val();
+        if(treasuries_balance == "" || treasuries_balance == 0){
+            alert("عفوا لا يوجد لديك رصيد كافي في الخزنة !!");
+            $("#money").focus();
+            return false ;
+        }
+        if(parseFloat(money)>parseFloat(treasuries_balance)){
+            alert("عفوا لا يوجد لديك رصيد كافي في الخزنة !!");
+            $("#money").focus();
+            return false ;
+         }
         var byan =$("#byan").val();
         if(byan == ""){
             alert("من فضلك ادخل  البيان بشكل واضح");

@@ -14,6 +14,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Admins_ShiftsController;
 use App\Http\Controllers\CollectController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\ExchangeController;
 use App\Http\Controllers\InvItemcardCategorieController;
 use App\Http\Controllers\InvItemCardController;
 use App\Http\Controllers\Sales_material_typesController;
@@ -195,6 +196,10 @@ Route::get('/collect_transaction/create',[CollectController::class,'create'])->n
 Route::post('/collect_transaction/store',[CollectController::class,'store'])->name('admin.collect_transaction.store');
 
 //end admin_shifts
+Route::get('/exchange_transaction/index',[ExchangeController::class,'index'])->name('admin.exchange_transaction.index');
+Route::get('/exchange_transaction/create',[ExchangeController::class,'create'])->name('admin.exchange_transaction.create');
+Route::post('/exchange_transaction/store',[ExchangeController::class,'store'])->name('admin.exchange_transaction.store');
+
 
 
 });

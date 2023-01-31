@@ -15,12 +15,13 @@ class CollectController extends Controller
 {
     public function index(){
         $com_code = auth()->user()->com_code ;
-        $data = Treasuries_transactions::select()->where(['com_code'=>$com_code])->orderby('id','DESC')->paginate(PAGINATION_COUNT);
+        $data = Treasuries_transactions::select()->where(['com_code'=>$com_code])->where('money','>','0')->orderby('id','DESC')->paginate(PAGINATION_COUNT);
         if(!empty($data)){
 
             foreach($data as $info){
               $info->added_by_admin = Admin::where('id', $info->added_by)->value('name');
               $info->treasuries_name = Treasuries::where('id', $info->treasuries_id)->value('name');
+              $info->mov_type_name = Mov_type::where('id', $info->mov_type)->value('name');
             }
         }
             //    $info->parent_inv_itemcard_name =Inv_itemcard::where(['id'=>$info->parent_inv_itemcard_id])->value('name');
@@ -52,7 +53,14 @@ class CollectController extends Controller
             if(empty($trasury_data)){
                 return redirect()->back()->with(['error'=>'!!عفوا بيانات الخزنة المختارة غير موجودة']);
             }
+             $latest_record = Treasuries_transactions::select('auto_serial')->where(['com_code'=>$com_code])->orderby('auto_serial','DESC')->first();
+             if(!empty($latest_record )){
+                $data_Insert['auto_serial'] =   $latest_record['auto_serial'] +1;
 
+             }else{
+                $data_Insert['auto_serial'] = 1;
+
+             }
             $data_Insert['isal_number']= $trasury_data['last_isal_collect'] + 1 ;
             $data_Insert['shift_code']=   $checkExistsopenshifts ['shift_code'];
             // مدين
@@ -71,8 +79,10 @@ class CollectController extends Controller
             $data_Insert['com_code']= $com_code;
             $flag = Treasuries_transactions::create($data_Insert);
             if($flag){
+                // $dataUpdateTreasuries['last_isal_collect'] = $data_Insert['isal_number'];
+                // update(new Treasuries(), $dataUpdateTreasuries, array("com_code" => $com_code, "id" => $request->treasuries_id));
                 $dataUpdateTresuries['last_isal_collect'] = $data_Insert['isal_number'];
-                 Treasuries::update($dataUpdateTresuries)->where(['com_code'=>$com_code,'id'=>$request->treasuries_id]);
+                 Treasuries::where(['com_code'=>$com_code,'id'=>$request->treasuries_id])->update($dataUpdateTresuries);
             return redirect()->route('admin.collect_transaction.index')->with(['success'=>'تم اضافة البيانات بنجاح']);
             } else{
                 return redirect()->back()->with(['error'=>'!!عفوا حدث خطأ ما من فضلك  حاول مرة أخرى']);

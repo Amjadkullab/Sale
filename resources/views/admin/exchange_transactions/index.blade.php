@@ -1,8 +1,8 @@
 @extends('layouts.master')
-@section('title', ' شاشة تحصيل النقدية')
+@section('title', ' شاشة صرف النقدية')
 @section('contentheader', 'الحسابات ')
 @section('contentheaderlink')
-    <a href="{{ route('admin.collect_transaction.index') }}">شاشة تجصيل النقدية</a>
+    <a href="{{ route('admin.exchange_transaction.index') }}">شاشة صرف النقدية</a>
 @endsection
 @section('contentheaderactive', 'عرض')
 @section("css")
@@ -15,7 +15,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title card_title_center">بيانات حركة تحصيل النقدية في النظام</h3>
+                    <h3 class="card-title card_title_center">بيانات حركة صرف النقدية في النظام</h3>
                     <input type="hidden" id="search_token" value="{{csrf_token() }}">
                 {{-- <a href="{{ route('admin.collect_transaction.create') }}" class="btn btn-sm btn-success">تحصيل جديد</a> --}}
 
@@ -26,7 +26,7 @@
                 <div class="card-body">
                     @if(!empty($checkExistsopenshifts))
 
-                    <form action= {{ route('admin.collect_transaction.store') }} method="POST" class="custom-form" >
+                    <form action= {{ route('admin.exchange_transaction.store') }} method="POST" class="custom-form" >
                         @csrf
                         <div class="row">
 
@@ -43,7 +43,7 @@
                                     <div class="form-group">
                                         <label for="account_number">الحسابات المالية</label>
                                         <select name="account_number" id="account_number" class="form-control select2">
-                                            <option value="">اختر الحساب المالي المحصل منه</option>
+                                            <option value="">اختر الحساب المالي  المصروف له</option>
                                             @if(@isset($accounts) && !@empty($accounts) )
                                             @foreach ($accounts as $info )
                                             <option @if (old('account_number')==$info->account_number) selected = "selected" @endif value="{{ $info->account_number }}">{{$info->name  }}</option>
@@ -93,7 +93,7 @@
 
                            <div class="col-md-4">
                             <div class="form-group">
-                               <label for="money">قيمة المبلغ المحصل</label>
+                               <label for="money">قيمة المبلغ المصروف</label>
                                <input oninput="this.value=this.value.replace(/[^0-9.]/g,'');"  name="money" value="{{ old('money') }}"  id="money" class="form-control" >
                                 @error('money')
                                 <span class="text-danger" >{{ $message }}</span>
@@ -105,7 +105,7 @@
                             <div class="col-md-6">
                               <div class="form-group">
                                <label for="byan">   البيان</label>
-                               <textarea name="byan" id="byan"  cols="10" rows="4" class="form-control"> {{ old("byan","تحصيل نظير") }}</textarea>
+                               <textarea name="byan" id="byan"  cols="10" rows="4" class="form-control"> {{ old("byan","صرف نظير") }}</textarea>
                                 @error('byan')
                                 <span class="text-danger" >{{ $message }}</span>
                                 @enderror
@@ -118,7 +118,7 @@
                       </div>
                       <div class="col-md-12">
                        <div class="form-group text-center">
-                          <button id="do_collect_now_btn" type="submit" class="btn btn-sm btn-success"> تحصيل الان</button>
+                          <button id="do_exchange_now_btn" type="submit" class="btn btn-sm btn-success"> صرف الان</button>
                         </div>
                         </div>
 
@@ -127,7 +127,7 @@
                       </form>
                       @else
                       <div class="alert alert-warning" style="color: brown !important">
-!!تنبيه لا يوجد شفت مفتوح  لك  لكي تتمكن من التحصيل
+!!تنبيه لا يوجد شفت مفتوح  لك  لكي تتمكن من الصرف
                        </div>
                       @endif
 
@@ -153,7 +153,7 @@
                                             <td>{{ $info->auto_serial }}</td>
                                             <td>{{ $info->isal_number }}</td>
                                             <td>{{ $info->treasuries_name }}</td>
-                                            <td>{{ $info->money*(1)}}</td>
+                                            <td>{{ $info->money*(-1)}}</td>
                                             <td>{{ $info->mov_type_name  }}</td>
                                             <td>{{ $info->byan }}</td>
 
@@ -200,7 +200,7 @@
 <script  src="{{asset('admin_assets/js/suppliers_orders.js')}}"> </script>
 
 <script  src="{{ asset('admin_assets/plugins/select2/js/select2.full.min.js') }}"> </script>
-<script  src="{{ asset('admin_assets/js/collect_transaction.js') }}"> </script>
+<script  src="{{ asset('admin_assets/js/exchange_transaction.js') }}"> </script>
 <script>
     //Initialize Select2 Elements
     $('.select2').select2({
