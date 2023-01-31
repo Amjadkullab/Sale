@@ -26,19 +26,33 @@
                 <div class="card-body">
                     @if(!empty($checkExistsopenshifts))
 
-                    <form action= {{ route('admin.supplier.store') }} method="POST" class="custom-form" >
+                    <form action= {{ route('admin.collect_transaction.store') }} method="POST" class="custom-form" >
                         @csrf
                         <div class="row">
 
                             <div class="col-md-4">
                                 <div class="form-group">
                                    <label for="move_date">تاريخ الحركة  </label>
-                                   <input type="date"  name="move_date" value="{{ old('move_date',date("Y-m-d")) }}"  id="money" class="form-control" >
+                                   <input type="date"  name="move_date" value="{{ old('move_date',date("Y-m-d")) }}"  id="move_date" class="form-control" >
                                     @error('move_date')
                                     <span class="text-danger" >{{ $message }}</span>
                                     @enderror
                                 </div>
                                 </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="mov_type">نوع الحركة </label>
+                                        <select name="mov_type" id="mov_type" class="form-control select2">
+                                            <option value="">اختر نوع الحركة</option>
+                                            @if(@isset($mov_type) && !@empty($mov_type) )
+                                            @foreach ($mov_type as $info )
+                                            <option @if (old('mov_type')==$info->id) selected = "selected" @endif value="{{ $info->account_number }}">{{$info->name  }}</option>
+                                            @endforeach
+                                            @endif
+                                        </select>
+
+                                    </div>
+                                   </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="account_number">الحسابات المالية</label>
@@ -53,26 +67,23 @@
 
                                     </div>
                                    </div>
-                                   <div class="col-md-4" id="AcountStatusDiv"></div>
-                      <div class="col-md-4">
-                          <div class="form-group">
-                              <label for="treasuries_id">  بيانات الخزن </label>
-                             <select name="treasuries_id" id="treasuries_id" class="form-control" >
-
-
-                              <option value="{{$checkExistsopenshifts['treasuries_id']}}">{{$checkExistsopenshifts['treasuries_name']}}</option>
-
-                             </select>
-                               @error('treasuries_id')
-                               <span class="text-danger" >{{ $message }}</span>
-                               @enderror
-                           </div>
-                           </div>
+                                   <div class="col-md-4" id="AcountStatusDiv" style="display: none"></div>
+                                   <div class="col-md-4">
+                                    <div class="form-group">
+                                      <label>   بيانات الخزن</label>
+                                      <select name="treasuries_id" id="treasuries_id" class="form-control ">
+                                         <option value="{{ $checkExistsopenshifts['treasuries_id'] }}"> {{ $checkExistsopenshifts['treasuries_name'] }} </option>
+                                      </select>
+                                      @error('treasuries_id')
+                                      <span class="text-danger">{{ $message }}</span>
+                                      @enderror
+                                      </div>
+                                    </div>
 
                            <div class="col-md-4">
                             <div class="form-group">
                                <label for="treasuries_balance">  الرصيد المتاح في الخزنة</label>
-                               <input readonly  name="treasuries_balance" value="{{ old('treasuries_balance') }}"  id="treasuries_balance" class="form-control" >
+                               <input readonly  name="treasuries_balance" value="{{$checkExistsopenshift['treasuries_balance_now']}}"  id="treasuries_balance" class="form-control" >
                                 @error('treasuries_balance')
                                 <span class="text-danger" >{{ $message }}</span>
                                 @enderror
@@ -106,7 +117,7 @@
                       </div>
                       <div class="col-md-12">
                        <div class="form-group text-center">
-                          <button id="do_add_item_dd" type="submit" class="btn btn-sm btn-success"> تحصيل</button>
+                          <button id="do_collect_now_btn" type="submit" class="btn btn-sm btn-success"> تحصيل الان</button>
                         </div>
                         </div>
 
@@ -211,6 +222,7 @@
 <script  src="{{asset('admin_assets/js/suppliers_orders.js')}}"> </script>
 
 <script  src="{{ asset('admin_assets/plugins/select2/js/select2.full.min.js') }}"> </script>
+<script  src="{{ asset('admin_assets/js/collect_transaction.js') }}"> </script>
 <script>
     //Initialize Select2 Elements
     $('.select2').select2({

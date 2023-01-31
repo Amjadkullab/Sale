@@ -64,7 +64,12 @@ $info->available = false ;
             if ($checkExistsopentreasuries !=null and !empty($checkExistsopentreasuries)) {
                 return redirect()->route('admin.admin_shift.index')->with(['error' => ' عفوا الخزنة المختارة مستخدمة بالفعل من قبل مستخدم اخر  ولا يمكن استخدامها الا بعد الانتهاء من الشفت الاخر!' ]);
             }
-
+            $row = Admins_Shifts::select('shift_code')->where(['com_code'=>$com_code])->orderby('id','DESC')->first();
+            if(!empty($row)){
+                $data_insert['shift_code']=$row['shift_code']+1;
+                }else{
+                    $data_insert['shift_code']=1;
+                }
                 $data_insert['admin_id'] = $admin_id;
                 $data_insert['treasuries_id'] = $request->treasuries_id;
                 $data_insert['start_date'] = date('Y-m-d H:i:s');
