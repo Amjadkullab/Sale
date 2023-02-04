@@ -149,7 +149,7 @@ Route::get('/supplier_categories/delete/{id}',[SupplierCategoriesController::cla
  Route::get('/supplier/show/{id}',[SupplierController::class,'show'])->name('admin.supplier.show');
 
 //end suplier
-//start supplier order
+//start supplier order المشتريات
 Route::get('/supplier_order/index',[Suppliers_with_ordersController::class,'index'])->name('admin.supplier_order.index');
 Route::get('/supplier_order/create',[Suppliers_with_ordersController::class,'create'])->name('admin.supplier_order.create');
 Route::post('/supplier_order/store',[Suppliers_with_ordersController::class,'store'])->name('admin.supplier_order.store');
@@ -167,6 +167,8 @@ Route::post('/supplier_order/load_edit_item_details',[Suppliers_with_ordersContr
 Route::post('/supplier_order/edit_item_details',[Suppliers_with_ordersController::class,'edit_item_details'])->name('admin.supplier_order.edit_item_details');
 Route::get('/supplier_order/delete_details/{id}/{id_parent}',[Suppliers_with_ordersController::class,'delete_details'])->name('delete_details');
 Route::get('/supplier_order/do_approved/{id}',[Suppliers_with_ordersController::class,'do_approved'])->name('admin.supplier_order.do_approved');
+Route::post('/supplier_order/load_modal_approve_invoice',[Suppliers_with_ordersController::class,'load_modal_approve_invoice'])->name('admin.supplier_order.load_modal_approve_invoice');
+
 //end supplier order
 //start admin_accounts
 

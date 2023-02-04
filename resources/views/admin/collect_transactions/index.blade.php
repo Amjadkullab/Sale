@@ -46,7 +46,7 @@
                                             <option value="">اختر الحساب المالي المحصل منه</option>
                                             @if(@isset($accounts) && !@empty($accounts) )
                                             @foreach ($accounts as $info )
-                                            <option @if (old('account_number')==$info->account_number) selected = "selected" @endif value="{{ $info->account_number }}">{{$info->name  }}</option>
+                                            <option data-type="{{$info->account_type}}" @if (old('account_number')==$info->account_number) selected = "selected" @endif value="{{ $info->account_number }}">{{$info->name }}({{ $info->account_type_name }})</option>
                                             @endforeach
                                             @endif
                                         </select>
@@ -56,7 +56,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="mov_type">نوع الحركة </label>
-                                        <select name="mov_type" id="mov_type" class="form-control select2">
+                                        <select name="mov_type" id="mov_type" class="form-control">
                                             <option value="">اختر نوع الحركة</option>
                                             @if(@isset($mov_type) && !@empty($mov_type) )
                                             @foreach ($mov_type as $info )

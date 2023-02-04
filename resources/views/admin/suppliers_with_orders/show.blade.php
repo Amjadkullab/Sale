@@ -163,8 +163,8 @@
        @if($data['is_approved']==0)
 <a href="{{ route('admin.supplier_order.delete',$data['id']) }}" class="btn btn-sm are_you_shue  btn-danger">حذف</a>
 <a href="{{ route('admin.supplier_order.edit',$data['id']) }}" class="btn btn-sm btn-success">تعديل</a>
-<a href="{{ route('admin.supplier_order.do_approved',$data['id']) }}" class="btn btn-sm btn-primary">اعتماد</a>
-{{-- <button id="load_close_approve_invoice"  class="btn btn-sm btn-primary">تحميل الاعتماد والترحيل</button> --}}
+{{-- <a href="{{ route('admin.supplier_order.do_approved',$data['id']) }}" class="btn btn-sm btn-primary">اعتماد</a> --}}
+<button id="load_close_approve_invoice"  class="btn btn-sm btn-primary"> اعتماد والترحيل</button>
 
 @endif
 
@@ -197,8 +197,8 @@
         <input type="hidden" id="ajax_load_edit_item_details" value="{{route('admin.supplier_order.load_edit_item_details')}}">
         <input type="hidden" id="ajax_load_modal_add_details" value="{{route('admin.supplier_order.load_modal_add_details')}}">
         <input type="hidden" id="ajax_edit_item_details" value="{{ route('admin.supplier_order.edit_item_details') }}">
-        {{-- <input type="hidden" id="ajax_load_modal_approve_invoice" value="{{ route('admin.suppliers_orders.load_modal_approve_invoice') }}">
-        <input type="hidden" id="ajax_load_usershiftDiv" value="{{ route('admin.suppliers_orders.load_usershiftDiv') }}"> --}}
+        <input type="hidden" id="ajax_load_modal_approve_invoice" value="{{ route('admin.supplier_order.load_modal_approve_invoice') }}">
+        {{-- <input type="hidden" id="ajax_load_usershiftDiv" value="{{ route('admin.suppliers_orders.load_usershiftDiv') }}"> --}}
 
 
 
@@ -340,7 +340,24 @@
     <!-- /.modal-dialog -->
   </div>
 
-
+  <div class="modal fade " id="ModalApproveInvocie">
+    <div class="modal-dialog modal-xl" >
+       <div class="modal-content bg-info">
+          <div class="modal-header">
+             <h4 class="modal-title" style="text-align: center;width:100%">  اعتماد وترحيل فاتورة المشتريات</h4>
+             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+             <span aria-hidden="true">&times;</span></button>
+          </div>
+          <div class="modal-body" id="ModalApproveInvocie_body" style="background-color: white !important; color:black;">
+          </div>
+          <div class="modal-footer justify-content-between">
+             <button type="button" class="btn btn-outline-light" data-dismiss="modal">اغلاق</button>
+          </div>
+       </div>
+       <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+ </div>
 @endsection
 
 @section("script")

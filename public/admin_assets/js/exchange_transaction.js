@@ -51,5 +51,54 @@ $(document).ready(function(){
             return false ;
         }
     });
+    $(document).on('change',"#account_number",function(){
+        var account_number = $(this).val();
+        if(account_number ==""){
+            $("#mov_type").val("");
+        }else{
+ var account_type =$("#account_number option:selected").data("type");
+ // اذا  كان مورد
+          if(account_type == 2){
+            $("#mov_type").val(9);
+          }else if(account_type == 3){
+            // اذا كان عميل
+            $("#mov_type").val(6);
+          }
+          else if(account_type == 6){
+            // اذا كان بنك
+            $("#mov_type").val(18);
+          }
+          else {
+            // اذا كان عام
+            $("#mov_type").val(3);
+          }
+        }
+
+    });
+    $(document).on('change',"#mov_type",function(){
+        var account_number = $("#account_number").val();
+        if(account_number == ""){
+            alert("من فضلك اختر الحساب المالي أولا");
+            $("#mov_type").val("");
+            return false ;
+        }
+            var account_type =$("#account_number option:selected").data("type");
+            // اذا  كان مورد
+            if(account_type == 2){
+                $("#mov_type").val(9);
+              }else if(account_type == 3){
+                // اذا كان عميل
+                $("#mov_type").val(6);
+              }
+              else if(account_type == 6){
+                // اذا كان بنك
+                $("#mov_type").val(18);
+              }
+              else {
+                // اذا كان عام
+                $("#mov_type").val(3);
+              }
+                   });
+
 
 });

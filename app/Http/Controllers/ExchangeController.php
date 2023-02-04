@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\exchange_transactionRequest;
 use App\Models\Admin;
 use App\Models\Account;
 use App\Models\Mov_type;
 use App\Models\Treasuries;
-use App\Models\Admins_Shifts;
-
+use App\Models\AccountsType;
 use Illuminate\Http\Request;
+
+use App\Models\Admins_Shifts;
 use App\Models\Treasuries_transactions;
+use App\Http\Requests\exchange_transactionRequest;
 
 class ExchangeController extends Controller
 {
@@ -24,6 +25,8 @@ public function index(){
           $info->added_by_admin = Admin::where('id', $info->added_by)->value('name');
           $info->treasuries_name = Treasuries::where('id', $info->treasuries_id)->value('name');
           $info->mov_type_name = Mov_type::where('id', $info->mov_type)->value('name');
+          $info->account_type = Account::where(["account_number" => $info->account_number, "com_code" => $com_code])->value("account_type");
+          $info->account_type_name = AccountsType::where(["id" => $info->account_type])->value("name");
         }
     }
     $checkExistsopenshifts = Admins_Shifts::select('treasuries_id','shift_code')->where(['com_code' => $com_code, 'admin_id' => auth()->user()->id , 'is_finished'=>0])->first();
@@ -31,7 +34,12 @@ public function index(){
      $checkExistsopenshifts['treasuries_name']= Treasuries::where('id',  $checkExistsopenshifts['treasuries_id'])->value('name');
     }
  //      و بنفعش اعمل تحصيل على حساب اب وبدي اجيب كل الحسابات المالية يعني اعرضها عشان لما اعمل تحصيل يكون ل حساب مالي معين
- $accounts = Account::select('name','account_number')->where(['com_code'=>$com_code , 'is_archived'=>0 , 'is_parent'=>0])->orderby('id','DESC')->get();
+ $accounts = Account::select('name','account_number','account_type')->where(['com_code'=>$com_code , 'is_archived'=>0 , 'is_parent'=>0])->orderby('id','DESC')->get();
+ if (!empty($accounts)) {
+    foreach ($accounts as $info) {
+    $info->account_type_name = AccountsType::where(["id" => $info->account_type])->value("name");
+    }
+    }
  $mov_type = Mov_type::select('id','name')->where(['active'=>1 , 'in_screen'=>1, 'is_private_internal'=>0])->orderby('id','ASC')->get();
  //get treasuries balance
  $checkExistsopenshift['treasuries_balance_now'] = Treasuries_transactions::where(['com_code'=>$com_code,'shift_code'=>$checkExistsopenshifts['shift_code']])->sum('money');

@@ -26,7 +26,7 @@ class AccountsController extends Controller
                 // if($info->updated_by > 0 and $info->updated_by !=null ){
                 //     $info->updated_by_admin = Admin::where(['id',$info->updated_by])->value('name');
                 // }
-                $info->account_types_name =AccountsType::where(['id'=>$info->account_types_id])->value('name');
+                $info->account_types_name =AccountsType::where(['id'=>$info->account_type])->value('name');
                    if($info->is_parent==0){
 
                     $info->parent_account_name =Account::where(['account_number'=>$info->parent_account_number])->value('name');
@@ -68,7 +68,7 @@ class AccountsController extends Controller
 
 
         $data_insert['name'] = $request->name;
-        $data_insert['account_types_id']=$request->account_types_id;
+        $data_insert['account_type']=$request->account_type;
         $data_insert['is_parent']=$request->is_parent;
         if($data_insert['is_parent']==0){
             $data_insert['parent_account_number']=$request->parent_account_number;
@@ -128,7 +128,7 @@ class AccountsController extends Controller
             return redirect()->back()->with(['error'=>'عفوا اسم الحساب موجود من قبل'])->withInput();
         }
         $data_to_update['name'] = $request->name;
-        $data_to_update['account_types_id']=$request->account_types_id;
+        $data_to_update['account_type']=$request->account_type;
         $data_to_update['is_parent']=$request->is_parent;
         if($data_to_update['is_parent']==0){
             $data_to_update['parent_account_number']=$request->parent_account_number;
@@ -247,7 +247,7 @@ public function ajax_search(Request $request){
             // if($info->updated_by > 0 and $info->updated_by !=null ){
             //     $info->updated_by_admin = Admin::where(['id',$info->updated_by])->value('name');
             // }
-            $info->account_types_name =AccountsType::where(['id'=>$info->account_types_id])->value('name');
+            $info->account_types_name =AccountsType::where(['id'=>$info->account_type])->value('name');
                if($info->is_parent==0){
 
                 $info->parent_account_name =Account::where(['account_number'=>$info->parent_account_number])->value('name');

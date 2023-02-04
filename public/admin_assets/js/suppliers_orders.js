@@ -344,4 +344,84 @@ $(document).ready(function(){
 
 
     });
+    $(document).on('click', '#load_close_approve_invoice', function (e) {
+
+        var autoserailparent = $("#autoserailparent").val();
+        var token_search = $("#token_search").val();
+        var ajax_search_url = $("#ajax_load_modal_approve_invoice").val();
+
+        jQuery.ajax({
+          url: ajax_search_url,
+          type: 'post',
+          dataType: 'html',
+          cache: false,
+          data: { autoserailparent: autoserailparent, "_token": token_search },
+          success: function (data) {
+            $("#ModalApproveInvocie_body").html(data);
+            $("#ModalApproveInvocie").modal("show");
+
+          },
+          error: function () {
+
+          }
+        });
+
+      });
+      $(document).on('input',"#tax_percent",function(e){
+        recaluclate();
+      });
+      $(document).on('input',"#discount_percent",function(e){
+        recaluclate();
+      });
+      $(document).on('change',"#discount_type",function(e){
+        recaluclate();
+      });
+      function recaluclate() {
+        var total_cost_items = $("#total_cost_items").val();
+        total_cost_items = parseFloat(total_cost_items);
+        var tax_percent = $("#tax_percent").val();
+        if(tax_percent ==""){
+            tax_percent = 0 ;
+        }
+         tax_percent = parseFloat(tax_percent);
+
+         var tax_value = total_cost_items * tax_percent / 100 ;
+         tax_value = parseFloat(tax_value);
+         $("#tax_value").val(tax_value * 1);
+         var total_before_discount = total_cost_items + tax_value ;
+         $("#tax_value").val(total_before_discount * 1);
+         var discount_type = $("#discount_type").val();
+         if(discount_type != ""){
+            if(discount_type == 1){
+                var discount_percent = $("#discount_percent").val();
+                if(discount_percent == ""){
+                    discount_percent = 0 ;
+                }
+                discount_percent = parseFloat(discount_percent);
+                var discount_value = total_before_discount * discount_percent/100;
+                $("#discount_value").val(discount_value*1);
+                var total_cost = total_before_discount-discount_value;
+                $("#total_cost").val(total_cost*1);
+            }else{
+                var discount_percent = $("#discount_percent").val();
+                if(discount_percent == ""){
+                    discount_percent = 0 ;
+                }
+                discount_percent = parseFloat(discount_percent);
+                var discount_value = total_before_discount * discount_percent/100;
+                $("#discount_value").val(discount_percent*1);
+
+                var total_cost = total_before_discount-discount_percent;
+                $("#total_cost").val(total_cost*1);
+
+            }
+
+         }else{
+            $("#total_cost").val(total_before_discount);
+         }
+
+
+
+      }
+
     });
